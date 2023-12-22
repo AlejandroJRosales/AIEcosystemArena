@@ -10,6 +10,54 @@ import player
 import pygame
 
 
+
+class SpeciesInfo:
+	def __init__(self):
+		self.data = {
+			"deer": {
+				"sexes": {
+					"male": {
+						"size": (20, 30)
+					},
+					"female": {
+						"size": (20, 30)
+					}
+				},
+				"mate": Deer,
+				"predators": (Wolf, ),
+				"diet": (Plant, ),
+				"speed": random.uniform(3, 5),
+				"consumption rate": random.randint(2, 5)
+			},
+			"wolf": {
+				"sexes": {
+					"male": {
+						"size": (20, 30)
+					},
+					"female": {
+						"size": (20, 30)
+					}
+				},
+				"predators": (None, ),
+				"mate": Wolf,
+				"diet": (Deer, ),
+				"speed": random.uniform(3, 5),
+				"consumption rate": random.randint(30, 60)
+			},
+			"plant": {
+				"sexes": {
+					"male": {
+						"size": (8, 10)
+					},
+					"female": {
+						"size": (8, 10)
+					}
+				},
+				"mate": Plant,
+			}
+		}
+
+
 class Living(pygame.sprite.Sprite):
 	def __init__(self, world, coord):
 		super(Living, self).__init__()
@@ -372,51 +420,3 @@ class Plant(Living):
 class Coords:
 	x = -1
 	y = -1
-
-
-class SpeciesInfo:
-	def __init__(self):
-		self.data = {
-			"deer": {
-				"sexes": {
-					"male": {
-						"size": (20, 30)
-					},
-					"female": {
-						"size": (20, 30)
-					}
-				},
-				"mate": Deer,
-				"predators": (Wolf, ),
-				"diet": (Plant, ),
-				"speed": random.uniform(3, 5),
-				"consumption rate": random.randint(2, 5)
-			},
-			"wolf": {
-				"sexes": {
-					"male": {
-						"size": (20, 30)
-					},
-					"female": {
-						"size": (20, 30)
-					}
-				},
-				"predators": (None, ),
-				"mate": Wolf,
-				"diet": (Deer, ),
-				"speed": random.uniform(3, 5),
-				"consumption rate": random.randint(30, 60)
-			},
-			"plant": {
-				"sexes": {
-					"male": {
-						"size": (8, 10)
-					},
-					"female": {
-						"size": (8, 10)
-					}
-				},
-				"mate": Plant,
-			}
-		}
-
