@@ -5,7 +5,7 @@ import numpy as np
 import utils
 from environment import Water
 from social import Predator
-import ann
+import neural_network as ann
 import player
 import pygame
 
