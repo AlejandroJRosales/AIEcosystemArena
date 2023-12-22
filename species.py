@@ -350,7 +350,7 @@ class Animal(Living):
 			if self.rect.colliderect(obj):
 				# make sure the entity is not attacking itself since itself is in the list of entities
 				# a male and female will find each other, so all coniditons past the first one will be true  for male
-				# and female. Meaning the male will have a kid and the female, we want just the female to give birth
+				# and female. Meaning the male will have a kid and the female, we want just the choosen sex to give birth
 				if self.sex == "female" and self.look_for_mate and isinstance(obj, self.mate_pref) and self.sex != obj.sex and id(self) != id(obj):
 					# todo: look for best mate out of potential mates near by
 					envir_class.children.append(self.mate(obj))
@@ -382,6 +382,8 @@ class Animal(Living):
 				lower_bound, upper_bound
 			)
 		# child.mutation_multi = ((self.mutation_multi + parent2.mutation_multi) / 2) * random.uniform(0.9, 1.1)
+
+		# TODO: need to crossover parent 1 init neural network state with parents 2 init neural network state, NOT current state
 
 		self.last_child_tob = time.time()
 		self.update_internal_clocks()

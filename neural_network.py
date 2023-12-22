@@ -9,6 +9,12 @@ class DenseNetwork:
         self.direc_ls = animal.coord_changes
         self.nn = [[[random.uniform(-1, 1) for weight in range(self.layers[l_idx + 1])] for node in range(self.layers[l_idx])] for l_idx in range(len(self.layers) - 1)]
         self.output = 0
+        self.min_update = 0.998
+        self.max_update = 1.002
+
+    @staticmethod
+    def sigmoid(x):
+        return 1 / (1 + math.exp(-x))
         
     @staticmethod
     def softmax(vector):
@@ -29,19 +35,26 @@ class DenseNetwork:
                         outputs[l_idx + 1][w_index] += outputs[l_idx][n_idx] * self.nn[l_idx][n_idx][w_index]
         return self.softmax(outputs[-1])
 
+    def adjust_connections(self):
+        alpha = self.sigmoid(self.cost) * .01
+        loc_min_update, loc_max_update = self.min_update + alpha, self.max_update + alpha
+        self.nn = [[[weight * random.uniform() for weight in node] for node in layer] for layer in self.nn]
+
     def think(self, curr_coord, obj_locations, health_diff):
         # print(obj_locations)
         obj_locations = obj_locations if obj_locations is not None else (0, 0)
         x, y = curr_coord[0], curr_coord[1]
         x2, y2 = obj_locations[0], obj_locations[1]
+        self.cost = health_diff
         inputs = [x,
                   y,
                   x2,
                   y2,
-                  health_diff
+                  self.cost
                   ]
         # inputs = [self.distance_formula(self.focused_obj.x, self.focused_obj.y), self.focused_obj.x, self.focused_obj.y, self.x, self.y]
         outputs = list(self.propagate(inputs))
         self.output = outputs.index(max(outputs))
+        self.adjust_connections()
         # might need multiple nns for multiple outputs?
         return self.output
