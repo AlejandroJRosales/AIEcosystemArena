@@ -230,10 +230,10 @@ class Animal(Living):
 			# feed obj_locations, priorities, and difference in health as cost function through nn
 			health_diff = self.health - self.start_health
 			curr_coord = (self.x, self.y)
-			self.brain.think(curr_coord, self.obj_location, health_diff)
-
+			agents_choice = self.brain.think(curr_coord, self.obj_location, health_diff)
+			print(agents_choice)
 			# go to location
-			self.move()
+			self.move(agents_choice)
 
 	def update_resources_need(self):
 		# self.water_need = utils.clamp(self.water_need + self.water_increment, 0, 1)
