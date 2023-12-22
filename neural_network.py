@@ -39,7 +39,7 @@ class DenseNetwork:
     def adjust_connections(self):
         alpha = self.sigmoid(self.cost) * .01
         loc_min_update, loc_max_update = self.min_update + alpha, self.max_update + alpha
-        print(loc_min_update, loc_max_update)
+        # print(loc_min_update, loc_max_update)
         self.nn = [[[weight * random.uniform(loc_min_update, loc_max_update) for weight in node] for node in layer] for layer in self.nn]
 
     def think(self, curr_coord, obj_locations, health_diff):
@@ -58,6 +58,6 @@ class DenseNetwork:
         outputs = list(self.propagate(inputs))
         self.output = outputs.index(max(outputs))
         self.adjust_connections()
-        print(self.nn)
+        # print(self.nn)
         # might need multiple nns for multiple outputs?
         return self.output

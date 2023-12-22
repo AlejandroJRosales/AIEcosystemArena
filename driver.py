@@ -117,10 +117,10 @@ def to_hex(c):
 
 # get monitor width and height
 user32 = ctypes.windll.user32
-# world_width = user32.GetSystemMetrics(0)
-# world_height = user32.GetSystemMetrics(1)
-world_width = 1000
-world_height = 700
+world_width = user32.GetSystemMetrics(0)
+world_height = user32.GetSystemMetrics(1)
+# world_width = 1000
+# world_height = 700
 
 print("Starting creation of new world object...")
 ecosystem = EcosystemScene(world_width, world_height)
