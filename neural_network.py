@@ -1,5 +1,6 @@
 
 import random
+from numpy import exp
 
 
 class DenseNetwork:
@@ -14,8 +15,9 @@ class DenseNetwork:
         e = exp(vector)
         return e / e.sum()
 
-    def propagate(self, curr_coord, priority_dict, obj_locations, health_diff):
-        return [0, 0, 0, 1]
+    def propagate(self, inputs):
+        print(inputs)
+        # return [0, 0, 0, 1]
         # create the amount of outputs for up, down, left, right
         outputs = [[0 for node in range(layer_size)] for layer_size in self.layers]
         for l_idx in range(len(self.nn)):
@@ -27,12 +29,16 @@ class DenseNetwork:
                         outputs[l_idx + 1][w_index] += outputs[l_idx][n_idx] * self.nn[l_idx][n_idx][w_index]
         return self.softmax(outputs[-1])
 
-    @staticmethod
-    def think(curr_coord, priority_dict, obj_locations, health_diff):
-        inputs = [self.x,
-                  self.y,
-                  self.objs[0].x,
-                  self.objs[0].y,
+    def think(self, curr_coord, obj_locations, health_diff):
+        print(obj_locations)
+        obj_locations = obj_locations if obj_locations is not None else (0, 0)
+        x, y = curr_coord[0], curr_coord[1]
+        x2, y2 = obj_locations[0], obj_locations[1]
+        inputs = [x,
+                  y,
+                  x2,
+                  y2,
+                  health_diff
                   ]
         # inputs = [self.distance_formula(self.focused_obj.x, self.focused_obj.y), self.focused_obj.x, self.focused_obj.y, self.x, self.y]
         outputs = list(self.propagate(inputs))

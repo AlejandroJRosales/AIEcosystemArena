@@ -209,13 +209,15 @@ class Animal(Living):
 
 			# selfs priorities and respective need amount
 			# old implementation for choosing next move
-			self.priority_dict = dict(sorted(needs.items(), key=lambda item: item[1], reverse=True))			
+			priority_list = sorted(needs.items(), key=lambda item: item[1], reverse=True)
+			self.priority_dict = dict(priority_list)
+	
 
 			# starts with first priority
 			for need in self.priority_dict.keys():
-				obj_location = self.obj_locations[need]
+				self.obj_location = self.obj_locations[need]
 				# if self knows location of priority and thus location not none go to coords
-				if obj_location is not None:
+				if self.obj_location is not None:
 					self.priority = need
 					# self.coords_focused.x, self.coords_focused.y = obj_location[0], obj_location[1]
 					# if obj focused on is a predator transpose coords to go the
@@ -228,7 +230,7 @@ class Animal(Living):
 			# feed obj_locations, priorities, and difference in health as cost function through nn
 			health_diff = self.health - self.start_health
 			curr_coord = (self.x, self.y)
-			self.brain.propagate(curr_coord, self.priority_dict, self.obj_locations, health_diff)
+			self.brain.think(curr_coord, self.obj_location, health_diff)
 
 			# go to location
 			self.move()
