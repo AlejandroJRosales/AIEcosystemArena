@@ -42,11 +42,10 @@ class DenseNetwork:
         # print(loc_min_update, loc_max_update)
         self.nn = [[[weight * random.uniform(loc_min_update, loc_max_update) for weight in node] for node in layer] for layer in self.nn]
 
-    def think(self, curr_coord, obj_locations, health_diff):
+    def think(self, curr_coord, focused_obj_coords, health_diff):
         # print(obj_locations)
-        obj_locations = obj_locations if obj_locations is not None else (0, 0)
         x, y = curr_coord[0], curr_coord[1]
-        x2, y2 = obj_locations[0], obj_locations[1]
+        x2, y2 = focused_obj_coords[0], focused_obj_coords[1]
         self.cost = health_diff
         inputs = [x,
                   y,

@@ -1,12 +1,13 @@
 import random
 import ctypes
+import time
+import math
 import pygame
 import species
 import environment
 import utils
 import display
-import time
-import math
+import nndraw
 
 
 """
@@ -27,9 +28,9 @@ class EcosystemScene:
 		self.w = world_width
 		self.h = world_height
 		super(EcosystemScene, self).__init__()
-		num_plants = 15
-		num_deer = 20
-		num_wolfs = 4
+		num_plants = 20
+		num_deer = 30
+		num_wolfs = 5
 		self.species_types = {
 			species.Plant: num_plants,
 			species.Deer: num_deer,
@@ -119,13 +120,16 @@ def to_hex(c):
 # user32 = ctypes.windll.user32
 # world_width = user32.GetSystemMetrics(0)
 # world_height = user32.GetSystemMetrics(1)
-world_width = 900
+world_width = 850
 world_height = 500
 
 print("Starting creation of new world object...")
+# simulation setup
 ecosystem = EcosystemScene(world_width, world_height)
 
-screen = pygame.display.set_mode((world_width, world_height))
+# display setup
+screen = pygame.display.set_mode((ecosystem.w, ecosystem.h))
+nnd = nndraw.MyScene(screen, (ecosystem.w, ecosystem.h))
 pygame.display.set_caption('EcosystemScene')
 clock = pygame.time.Clock()
 internal_speed = 60
@@ -147,6 +151,10 @@ while True:
 				index += 1
 		[screen.blit(obj.img, (obj.x, obj.y)) if not isinstance(obj, environment.Water) else pygame.draw.rect(screen, (40, 101, 201), obj.rect) for obj in ecosystem.world]
 
+		if selected_obj is not None:
+			if isinstance(selected_obj, species.Animal):
+				nnd.draw(selected_obj.brain.nn)
+
 	# check for users key pressed
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -158,8 +166,8 @@ while True:
 			# # get object closest to where user clicked
 			selected_obj = ecosystem.select_obj(pygame.mouse.get_pos())
 			# # display stats of object
-			print()
-			display.analysis_mode(selected_obj)
+			# print()
+			# display.analysis_mode(selected_obj)
 			# print()
 			# # pause till user is ready to continue
 			# input("PRESS ENTER TO CONTINUE...")

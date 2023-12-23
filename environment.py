@@ -145,7 +145,7 @@ class Environment:
 			elif isinstance(obj, species.Plant):
 				obj.update()
 
-		if random.random() <= 0.75:
+		if random.random() <= 0.15:
 			environment.append(self.generate_plant())
 
 		environment = [obj for obj in environment if obj.alive]
@@ -159,7 +159,7 @@ class Water(pygame.sprite.Sprite):
 		pygame.sprite.Sprite.__init__(self)
 		self.x = coord[0]
 		self.y = coord[1]
-		size = 25
+		size = 20
 		self.alive = True
 
 		# img_file_name = "images/water.jpg"
