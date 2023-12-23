@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import species
 import utils
+from neural_network import DenseNetwork
 
 
 def text_pop_sizes(world):
@@ -24,5 +25,9 @@ def analysis_mode(obj):
 	print(f"Object Type: {type(obj)}")
 	print(f"Object ID: {id(obj)}")
 	for k, v in obj.__dict__.items():
-			print(f"{k}: {v}")
-			print("-" * 36)
+		print(f"{k}: ", end="")
+		if isinstance(v, DenseNetwork):
+			print(f"{v.nn}")
+		else:
+			print(f"{v}")
+		print("-" * 36)
