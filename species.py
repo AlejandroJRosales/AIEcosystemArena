@@ -279,7 +279,7 @@ class Animal(Living):
 			health_diff = self.health - self.start_health
 			curr_coord = (self.x, self.y)
 			agents_choice = self.brain.think(curr_coord, self.obj_location, health_diff)
-			print(agents_choice)
+			# print(agents_choice)
 			# go to location
 			self.move(agents_choice)
 

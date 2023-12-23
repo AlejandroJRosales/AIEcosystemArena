@@ -63,10 +63,10 @@ class EcosystemScene:
 		time.sleep(2)
 		print(f"Starting with {self.past_size} objects in world...")
 
-		# print("Starting world in...")
-		# for count in range(3, 0, -1):
-		# 	print(f"{count}...")
-		# 	time.sleep(0.5)
+		print("Starting world in...")
+		for count in range(3, 0, -1):
+			print(f"{count}...")
+			time.sleep(0.5)
 		# self.display_internals(self.world)
 
 	def update(self):
