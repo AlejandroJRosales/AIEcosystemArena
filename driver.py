@@ -28,16 +28,16 @@ class EcosystemScene:
 		self.h = world_height
 		super(EcosystemScene, self).__init__()
 		num_plants = 15
-		num_deer = 10
-		num_wolfs = 3
+		num_deer = 20
+		num_wolfs = 4
 		self.species_types = {
 			species.Plant: num_plants,
 			species.Deer: num_deer,
 			species.Wolf: num_wolfs
 		}
-		self.bodies_of_water = 2
-		self.water_body_size = "Large"
-		self.proportion = .8
+		self.bodies_of_water = 1
+		self.water_body_size = "Medium"
+		self.proportion = .6
 
 		self.envir_func = None
 		self.world = None
@@ -120,7 +120,7 @@ def to_hex(c):
 # world_width = user32.GetSystemMetrics(0)
 # world_height = user32.GetSystemMetrics(1)
 world_width = 900
-world_height = 900
+world_height = 500
 
 print("Starting creation of new world object...")
 ecosystem = EcosystemScene(world_width, world_height)

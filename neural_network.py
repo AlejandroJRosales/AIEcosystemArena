@@ -10,8 +10,8 @@ class DenseNetwork:
         self.direc_ls = animal.coord_changes
         self.nn = [[[random.uniform(-1, 1) for weight in range(self.layers[l_idx + 1])] for node in range(self.layers[l_idx])] for l_idx in range(len(self.layers) - 1)]
         self.output = 0
-        self.min_update = 0.998
-        self.max_update = 1.002
+        self.min_update = 0.9998
+        self.max_update = 1.0002
 
     @staticmethod
     def sigmoid(x):
@@ -37,7 +37,7 @@ class DenseNetwork:
         return self.softmax(outputs[-1])
 
     def adjust_connections(self):
-        alpha = self.sigmoid(self.cost) * .01
+        alpha = self.sigmoid(self.cost) * .0001
         loc_min_update, loc_max_update = self.min_update + alpha, self.max_update + alpha
         # print(loc_min_update, loc_max_update)
         self.nn = [[[weight * random.uniform(loc_min_update, loc_max_update) for weight in node] for node in layer] for layer in self.nn]
