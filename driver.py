@@ -117,11 +117,11 @@ def to_hex(c):
 
 
 # get monitor width and height
-user32 = ctypes.windll.user32
-world_width = user32.GetSystemMetrics(0)
-world_height = user32.GetSystemMetrics(1)
-# world_width = 850
-# world_height = 500
+# user32 = ctypes.windll.user32
+# world_width = user32.GetSystemMetrics(0)
+# world_height = user32.GetSystemMetrics(1)
+world_width = 850
+world_height = 500
 
 print("Starting creation of new world object...")
 # simulation setup
