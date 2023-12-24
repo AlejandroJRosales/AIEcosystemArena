@@ -156,7 +156,7 @@ class Animal(Living):
 
 		# brain
 		self.coord_changes = [(self.speed, 0), (-self.speed, 0), (0, self.speed), (0, -self.speed)]
-		self.nn_layers = [4, 7, 3, 7, len(self.coord_changes)]
+		self.weights_layers = [5, 1, 2, len(self.coord_changes)]
 		self.brain = ann.DenseNetwork(self)
 
 	def neighbors(self, objs):

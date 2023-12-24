@@ -29,7 +29,7 @@ class EcosystemScene:
 		self.h = world_height
 		super(EcosystemScene, self).__init__()
 		num_plants = 20
-		num_deer = 30
+		num_deer = 10
 		num_wolfs = 5
 		self.species_types = {
 			species.Plant: num_plants,
@@ -153,7 +153,7 @@ while True:
 
 		if selected_obj is not None:
 			if isinstance(selected_obj, species.Animal):
-				nnd.draw(selected_obj.brain.nn)
+				nnd.draw(selected_obj.brain.weights)
 
 	# check for users key pressed
 	for event in pygame.event.get():
