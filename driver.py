@@ -28,9 +28,9 @@ class EcosystemScene:
 		self.w = world_width
 		self.h = world_height
 		super(EcosystemScene, self).__init__()
-		num_plants = 15
-		num_deer = 70
-		num_wolfs = 20
+		num_plants = 40
+		num_deer = 40
+		num_wolfs = 10
 		self.species_types = {
 			species.Plant: num_plants,
 			species.Deer: num_deer,
@@ -38,7 +38,7 @@ class EcosystemScene:
 		}
 		self.bodies_of_water = 2
 		self.water_body_size = "Medium"
-		self.proportion = .5
+		self.proportion = .7
 
 		self.envir_func = None
 		self.world = None
@@ -116,10 +116,12 @@ def to_hex(c):
 	return '{:X}{:X}{:X}'.format(c[0], c[1], c[2])
 
 
-# get monitor width and height
+# get monitor width and height for full screen mode
 # user32 = ctypes.windll.user32
 # world_width = user32.GetSystemMetrics(0)
 # world_height = user32.GetSystemMetrics(1)
+
+# preset window size
 world_width = 850
 world_height = 500
 

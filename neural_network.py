@@ -40,7 +40,8 @@ class DenseNetwork:
         return self.softmax(sliding_layer)
 
     def adjust_coweightsections(self):
-        alpha = self.sigmoid(self.cost) * .001
+        # TODO: implement heritable learning rate aka alpha value 
+        alpha = self.sigmoid(self.cost) * .0001
         loc_min_update, loc_max_update = self.min_update + alpha, self.max_update + alpha
         # print(loc_min_update, loc_max_update)
         self.weights = [[[weight * random.uniform(loc_min_update, loc_max_update) for weight in node] for node in layer] for layer in self.weights]

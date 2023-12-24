@@ -158,6 +158,7 @@ class Animal(Living):
 		self.coord_changes = [(self.speed, 0), (-self.speed, 0), (0, self.speed), (0, -self.speed)]
 		self.num_inputs = 2
 		self.weights_layers = [self.num_inputs, 7, 3, 7, len(self.coord_changes)]
+		print(f"\t\t\t\tCreating neural network for {self.species_type}:{id(self)}...")
 		self.brain = ann.DenseNetwork(self)
 
 	def neighbors(self, objs):
@@ -338,12 +339,6 @@ class Animal(Living):
 	def new_explore_coords(self):
 		self.coords_focused.x = self.world.world_width * random.uniform(0, 1)
 		self.coords_focused.y = self.world.world_height * random.uniform(0, 1)
-
-	# def collide(self, obj):
-	# 	distance = utils.distance_formula(self.x, self.y, obj.x, obj.y)
-	# 	if distance <= 7:
-	# 		return True
-	# 	return False
 
 	def detect_collision(self, envir_class, objs):
 		for obj in objs:
