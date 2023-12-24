@@ -81,8 +81,8 @@ class Living(pygame.sprite.Sprite):
 	def get_coords(self):
 		return self.x, self.y
 		
-	def is_eaten_from(self, obj):
-		health_depl = self.start_health
+	def attacked(self, obj):
+		health_depl = self.start_health * .02
 		
 		# subtract health from self since being eaten
 		self.health -= health_depl
@@ -137,8 +137,8 @@ class Animal(Living):
 		self.food_need = round(random.uniform(0.01, 0.03), 4)
 		self.reproduction_need = round(random.uniform(0.01, 0.03), 4)
 		self.avoid_need = 0
-		self.food_increment = self.health * 0.00125
-		self.water_increment = self.health * 0.001
+		self.food_increment = self.health * 0.000125
+		self.water_increment = self.health * 0.0001
 		self.reproduction_increment = self.health * 0.0005
 		# self.predator_reaction = 2
 		self.last_child_tob = time.time()
@@ -156,7 +156,8 @@ class Animal(Living):
 
 		# brain
 		self.coord_changes = [(self.speed, 0), (-self.speed, 0), (0, self.speed), (0, -self.speed)]
-		self.weights_layers = [3, 7, 3, 7, len(self.coord_changes)]
+		self.num_inputs = 2
+		self.weights_layers = [self.num_inputs, 7, 3, 7, len(self.coord_changes)]
 		self.brain = ann.DenseNetwork(self)
 
 	def neighbors(self, objs):
@@ -170,11 +171,9 @@ class Animal(Living):
 			return normalized_v * self.speed
 		return normalized_v * (self.speed * 0.3)
 
-	def move(self, coord_change=None):
-		if self.is_player:
-			coord_change = np.multiply(coord_change, self.speed)
-		else:
-			coord_change = self.normalize_direction_focused()
+	def move(self, coord_idx=None):
+		# AHHH I WAS NORMALIZING THE VECOTORS WHEN IT SHOULD NOT BE DONE
+		coord_change = self.coord_changes[coord_idx]
 		self.x = (coord_change[0] + self.x) % self.world.world_width
 		self.y = (coord_change[1] + self.y) % self.world.world_height
 		self.rect.center = (self.x, self.y)
@@ -357,7 +356,7 @@ class Animal(Living):
 					# todo: look for best mate out of potential mates near by
 					envir_class.children.append(self.mate(obj))
 				elif type(obj) in self.diet:
-					obj.is_eaten_from(self)
+					obj.attacked(self)
 				elif isinstance(obj, Water):
 					self.water_need -= self.water_increment
 

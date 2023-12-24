@@ -28,17 +28,17 @@ class EcosystemScene:
 		self.w = world_width
 		self.h = world_height
 		super(EcosystemScene, self).__init__()
-		num_plants = 20
-		num_deer = 10
-		num_wolfs = 5
+		num_plants = 15
+		num_deer = 70
+		num_wolfs = 20
 		self.species_types = {
 			species.Plant: num_plants,
 			species.Deer: num_deer,
 			species.Wolf: num_wolfs
 		}
-		self.bodies_of_water = 1
+		self.bodies_of_water = 2
 		self.water_body_size = "Medium"
-		self.proportion = .6
+		self.proportion = .5
 
 		self.envir_func = None
 		self.world = None
