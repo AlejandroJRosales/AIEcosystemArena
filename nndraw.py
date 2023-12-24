@@ -10,12 +10,13 @@ class MyScene:
 
     def draw(self, nn):
         all_nodes_pos = self.draw_nodes(nn)
-        for l_idx in range(len(nn)):
-            for n_idx in range(len(nn[l_idx])):
-                for w_idx in range(len(nn[l_idx][n_idx])):
-                    current_node_pos = all_nodes_pos[l_idx][n_idx]
-                    next_node_pos = all_nodes_pos[l_idx + 1][w_idx]
-                    weight = nn[l_idx][n_idx][w_idx]
+        for l_idx in range(len(all_nodes_pos) - 1):
+            for n1_idx in range(len(all_nodes_pos[l_idx])):
+                print(len(all_nodes_pos[l_idx + 1]))
+                for n2_idx in range(len(all_nodes_pos[l_idx + 1])):
+                    current_node_pos = all_nodes_pos[l_idx][n1_idx]
+                    next_node_pos = all_nodes_pos[l_idx + 1][n2_idx]
+                    weight = nn[l_idx][n1_idx][n2_idx]
                     width = int(abs(weight) // 1)
                     line_color = (173, 216, 230) if weight >= 0 else (255, 204, 203)
                     pygame.draw.line(self.window,

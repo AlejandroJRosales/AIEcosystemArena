@@ -2,13 +2,14 @@
 import random
 import math
 from numpy import exp
+import utils
 
 
 class DenseNetwork:
     def __init__(self, animal):
         self.layers = animal.weights_layers
         self.direc_ls = animal.coord_changes
-        self.weights = [[[random.uniform(-1, 1) for weight in range(self.layers[l_idx])] for node in range(self.layers[l_idx])] for l_idx in range(len(self.layers))]
+        self.weights = [[[random.uniform(-1, 1) for weight in range(self.layers[l_idx + 1])] for node in range(self.layers[l_idx])] for l_idx in range(len(self.layers) - 1)]
         self.output = 0
         self.min_update = 0.9998
         self.max_update = 1.0002
@@ -49,19 +50,18 @@ class DenseNetwork:
         # print(loc_min_update, loc_max_update)
         self.weights = [[[weight * random.uniform(loc_min_update, loc_max_update) for weight in node] for node in layer] for layer in self.weights]
 
-    def think(self, curr_coord, focused_obj_coords, health_diff):
-        # print(obj_locations)
+    def map_input(self, curr_coord, focused_obj_coords, priority, health_diff):
         x, y = curr_coord[0], curr_coord[1]
         x2, y2 = focused_obj_coords[0], focused_obj_coords[1]
+        dist = utils.distance_formula(x, y, focused_obj_coords[0], focused_obj_coords[1])
         self.cost = health_diff
-        inputs = [x,
-                  y,
-                  x2,
-                  y2,
-                  self.cost
-                  ]
+        sign = -1 if priority == "predator" else 1
+        return [dist, self.cost, sign]
+    
+    def think(self, curr_coord, focused_obj_coords, priority, health_diff):
+        mapped_input = self.map_input(curr_coord, focused_obj_coords, priority, health_diff)
         # inputs = [self.distance_formula(self.focused_obj.x, self.focused_obj.y), self.focused_obj.x, self.focused_obj.y, self.x, self.y]
-        outputs = list(self.propagate(inputs))
+        outputs = list(self.propagate(mapped_input))
         self.output = outputs.index(max(outputs))
         self.adjust_coweightsections()
         # print(self.weights)

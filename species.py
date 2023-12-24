@@ -156,7 +156,7 @@ class Animal(Living):
 
 		# brain
 		self.coord_changes = [(self.speed, 0), (-self.speed, 0), (0, self.speed), (0, -self.speed)]
-		self.weights_layers = [5, 1, 2, len(self.coord_changes)]
+		self.weights_layers = [3, 7, 3, 7, len(self.coord_changes)]
 		self.brain = ann.DenseNetwork(self)
 
 	def neighbors(self, objs):
@@ -280,7 +280,7 @@ class Animal(Living):
 			curr_coord = (self.x, self.y)
 			focused_obj_coords = self.obj_location
 			if focused_obj_coords is not None:
-				agents_choice = self.brain.think(curr_coord, focused_obj_coords, health_diff)
+				agents_choice = self.brain.think(curr_coord, focused_obj_coords, self.priority, health_diff)
 				# print(agents_choice)
 				# go to location
 				self.move(agents_choice)
