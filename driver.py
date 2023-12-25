@@ -29,7 +29,7 @@ class EcosystemScene:
 		self.h = world_height
 		super(EcosystemScene, self).__init__()
 		num_plants = 40
-		num_deer = 40
+		num_deer = 30
 		num_wolfs = 10
 		self.species_types = {
 			species.Plant: num_plants,

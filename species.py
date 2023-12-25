@@ -157,7 +157,7 @@ class Animal(Living):
 		# brain
 		self.coord_changes = [(self.speed, 0), (-self.speed, 0), (0, self.speed), (0, -self.speed), (self.speed, self.speed), (self.speed, -self.speed), (-self.speed, self.speed), (-self.speed, -self.speed)]
 		self.num_inputs = 5
-		self.weights_layers = [self.num_inputs, 4, 3, 4, 3, len(self.coord_changes)]
+		self.weights_layers = [self.num_inputs, 6, 3, 6, 3, len(self.coord_changes)]
 		print(f"\t\t\t\tCreating neural network for {self.species_type}:{id(self)}...")
 		self.brain = ann.DenseNetwork(self)
 
