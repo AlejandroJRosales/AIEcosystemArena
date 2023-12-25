@@ -52,7 +52,7 @@ class DenseNetwork:
         dist = utils.distance_formula(x, y, focused_obj_coords[0], focused_obj_coords[1])
         self.cost = health_diff
         sign = -1 if priority == "predator" else 1
-        return [dist, sign]
+        return [x, y, x2, y2, sign]
     
     def think(self, curr_coord, focused_obj_coords, priority, health_diff):
         mapped_input = self.map_input(curr_coord, focused_obj_coords, priority, health_diff)
