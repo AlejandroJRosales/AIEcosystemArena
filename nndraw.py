@@ -30,9 +30,9 @@ class MyScene:
         self.node_size = 12
         nn_len = len(nn)
         all_nodes_pos = list()
-        for l_idx in range(nn_len + 1):
+        for l_idx in range(nn_len):
             l_nodes_pos = list()
-            num_nodes = len(nn[l_idx]) if l_idx != nn_len else len(nn[-1][0])
+            num_nodes = len(nn[l_idx])
             for n_idx in range(num_nodes):
                 adjust = num_nodes * h_stride // 2
                 x = (self.w_width * .2) + l_idx * w_stride - 175

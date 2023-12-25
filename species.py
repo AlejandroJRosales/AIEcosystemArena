@@ -157,7 +157,7 @@ class Animal(Living):
 		# brain
 		self.coord_changes = [(self.speed, 0), (-self.speed, 0), (0, self.speed), (0, -self.speed), (self.speed, self.speed), (self.speed, -self.speed), (-self.speed, self.speed), (-self.speed, -self.speed)]
 		self.num_inputs = 5
-		self.weights_layers = [self.num_inputs, 7, 3, 7, len(self.coord_changes)]
+		self.weights_layers = [self.num_inputs, 4, 3, 4, 3, len(self.coord_changes)]
 		print(f"\t\t\t\tCreating neural network for {self.species_type}:{id(self)}...")
 		self.brain = ann.DenseNetwork(self)
 
@@ -173,8 +173,12 @@ class Animal(Living):
 		return normalized_v * (self.speed * 0.3)
 
 	def move(self, coord_idx=None):
-		# AHHH I WAS NORMALIZING THE VECOTORS WHEN IT SHOULD NOT BE DONE
-		coord_change = self.coord_changes[coord_idx]
+		# AHHH I WAS NORMALIZING THE VECTORS WHEN IT SHOULD NOT BE DONE
+		try:
+			coord_change = self.coord_changes[coord_idx]
+		except:
+			print(coord_idx)
+			assert 1 == 2
 		self.x = (coord_change[0] + self.x) % self.world.world_width
 		self.y = (coord_change[1] + self.y) % self.world.world_height
 		self.rect.center = (self.x, self.y)
@@ -371,8 +375,7 @@ class Animal(Living):
 		child.speed = ((self.speed + parent2.speed) / 2) * random.uniform(
 			lower_bound,
 			upper_bound)
-		child.coord_changes = [(0, child.speed), (0, -child.speed), (child.speed, 0),
-																									(-child.speed, 0)]
+		child.coord_changes = [(child.speed, 0), (-child.speed, 0), (0, child.speed), (0, -child.speed), (child.speed, child.speed), (child.speed, -child.speed), (-child.speed, child.speed), (-child.speed, -child.speed)]
 		child.vision_dist = (
 			(self.vision_dist + parent2.vision_dist) // 2) * random.uniform(
 				lower_bound, upper_bound
@@ -384,6 +387,10 @@ class Animal(Living):
 		self.last_child_tob = time.time()
 		self.update_internal_clocks()
 		self.reproduction_need = 0
+
+		parent2.last_child_tob = time.time()
+		parent2.update_internal_clocks()
+		parent2.reproduction_need = 0
 
 		return child
 

@@ -8,9 +8,10 @@ import utils
 class DenseNetwork:
     def __init__(self, animal):
         self.layers = animal.weights_layers
-        self.direc_ls = animal.coord_changes
+        print(self.layers)
         self.weights = [[[random.uniform(-1, 1) for weight in range(self.layers[l_idx + 1])] for node in range(self.layers[l_idx])] for l_idx in range(len(self.layers) - 1)]
-        self.input_weights_added = False
+        self.weights.append([[random.uniform(-1, 1) for weight in range(self.layers[-2])] for node in range(self.layers[-1])])
+        print([len(l) for l in self.weights])
         self.min_update = 0.9998
         self.max_update = 1.0002
 
@@ -39,7 +40,7 @@ class DenseNetwork:
             sliding_layer = out_layer
         return self.softmax(sliding_layer)
 
-    def adjust_coweightsections(self):
+    def adjust_weights(self):
         # TODO: implement heritable learning rate aka alpha value 
         alpha = self.sigmoid(self.cost) * .0001
         loc_min_update, loc_max_update = self.min_update + alpha, self.max_update + alpha
@@ -59,7 +60,7 @@ class DenseNetwork:
         # inputs = [self.distance_formula(self.focused_obj.x, self.focused_obj.y), self.focused_obj.x, self.focused_obj.y, self.x, self.y]
         values = list(self.propagate(mapped_input))
         self.output = max(range(len(values)), key=values.__getitem__)
-        self.adjust_coweightsections()
+        self.adjust_weights()
         # print(self.weights)
         # might need multiple weightss for multiple outputs?
         return self.output
