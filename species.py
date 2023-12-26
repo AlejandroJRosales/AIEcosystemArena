@@ -158,8 +158,9 @@ class Animal(Living):
 		self.coord_changes = [(self.speed, 0), (-self.speed, 0), (0, self.speed), (0, -self.speed), (self.speed, self.speed), (self.speed, -self.speed), (-self.speed, self.speed), (-self.speed, -self.speed)]
 		self.num_inputs = 5
 		self.weights_layers = [self.num_inputs, 6, 3, 6, 3, len(self.coord_changes)]
-		print(f"\t\t\t\tCreating neural network for {self.species_type}:{id(self)}...")
+		print(f"\t\t\tCreating neural network for {self.species_type}:{id(self)}...")
 		self.brain = ann.DenseNetwork(self)
+		self.output = None
 
 	def neighbors(self, objs):
 		return [obj for obj in objs if utils.distance_formula(self.x, self.y, obj.x, obj.y) <= self.vision_dist and id(self) != id(obj)]
@@ -173,12 +174,7 @@ class Animal(Living):
 		return normalized_v * (self.speed * 0.3)
 
 	def move(self, coord_idx=None):
-		# AHHH I WAS NORMALIZING THE VECTORS WHEN IT SHOULD NOT BE DONE
-		try:
-			coord_change = self.coord_changes[coord_idx]
-		except:
-			print(coord_idx)
-			assert 1 == 2
+		coord_change = self.coord_changes[coord_idx]
 		self.x = (coord_change[0] + self.x) % self.world.world_width
 		self.y = (coord_change[1] + self.y) % self.world.world_height
 		self.rect.center = (self.x, self.y)
@@ -285,6 +281,7 @@ class Animal(Living):
 			focused_obj_coords = self.obj_location
 			if focused_obj_coords is not None:
 				agents_choice = self.brain.think(curr_coord, focused_obj_coords, self.priority, health_diff)
+				self.output_idx = agents_choice
 				# print(agents_choice)
 				# go to location
 				self.move(agents_choice)

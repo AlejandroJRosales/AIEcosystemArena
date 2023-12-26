@@ -28,8 +28,8 @@ class EcosystemScene:
 		self.w = world_width
 		self.h = world_height
 		super(EcosystemScene, self).__init__()
-		num_plants = 40
-		num_deer = 30
+		num_plants = 50
+		num_deer = 50
 		num_wolfs = 10
 		self.species_types = {
 			species.Plant: num_plants,
@@ -117,13 +117,13 @@ def to_hex(c):
 
 
 # get monitor width and height for full screen mode
-# user32 = ctypes.windll.user32
-# world_width = user32.GetSystemMetrics(0)
-# world_height = user32.GetSystemMetrics(1)
+user32 = ctypes.windll.user32
+world_width = user32.GetSystemMetrics(0)
+world_height = user32.GetSystemMetrics(1)
 
 # preset window size
-world_width = 850
-world_height = 500
+# world_width = 850
+# world_height = 500
 
 print("Starting creation of new world object...")
 # simulation setup
@@ -152,10 +152,6 @@ while True:
 								 )
 				index += 1
 		[screen.blit(obj.img, (obj.x, obj.y)) if not isinstance(obj, environment.Water) else pygame.draw.rect(screen, (40, 101, 201), obj.rect) for obj in ecosystem.world]
-
-		if selected_obj is not None:
-			if isinstance(selected_obj, species.Animal):
-				nnd.draw(selected_obj.brain.weights)
 
 	# check for users key pressed
 	for event in pygame.event.get():
@@ -226,6 +222,10 @@ while True:
 	# 	print(f"Display paused...") if not display_world else print("Display running...")
 
 	ecosystem.update()
+
+	if display_world and selected_obj is not None and isinstance(selected_obj, species.Animal):
+				nnd.draw(selected_obj.brain.weights, selected_obj.output_idx)
+
 	pygame.display.update()
 
 	clock.tick(internal_speed)

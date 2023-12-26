@@ -129,7 +129,7 @@ class Environment:
 		self.y = (self.y + coord_change[1]) % self.world_height
 		
 	def generate_plant(self):
-		if random.random() <= 0.8:
+		if random.random() <= 0.7:
 			coords = random.choice(self.soil)
 			# print(coords)
 			plant_coords = (coords.x + random.uniform(-60, 60), coords.y + random.uniform(-60, 60))

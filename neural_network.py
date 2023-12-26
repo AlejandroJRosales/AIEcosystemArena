@@ -7,11 +7,12 @@ import utils
 
 class DenseNetwork:
     def __init__(self, animal):
+        # TODO: tune hyperparameters
         self.layers = animal.weights_layers
-        print(self.layers)
+        # print(self.layers)
         self.weights = [[[random.uniform(-1, 1) for weight in range(self.layers[l_idx + 1])] for node in range(self.layers[l_idx])] for l_idx in range(len(self.layers) - 1)]
         self.weights.append([[random.uniform(-1, 1) for weight in range(self.layers[-2])] for node in range(self.layers[-1])])
-        print([len(l) for l in self.weights])
+        # print([len(l) for l in self.weights])
         self.min_update = 0.9998
         self.max_update = 1.0002
 
@@ -50,7 +51,7 @@ class DenseNetwork:
     def map_input(self, curr_coord, focused_obj_coords, priority, health_diff):
         x, y = curr_coord[0], curr_coord[1]
         x2, y2 = focused_obj_coords[0], focused_obj_coords[1]
-        dist = utils.distance_formula(x, y, focused_obj_coords[0], focused_obj_coords[1])
+        # dist = utils.distance_formula(x, y, focused_obj_coords[0], focused_obj_coords[1])
         self.cost = health_diff
         sign = -1 if priority == "predator" else 1
         return [x, y, x2, y2, sign]

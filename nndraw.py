@@ -8,8 +8,8 @@ class MyScene:
         self.w_height = screen_size[1]
         self.node_size = 15
 
-    def draw(self, nn):
-        all_nodes_pos = self.draw_nodes(nn)
+    def draw(self, nn, marked_node_idx):
+        all_nodes_pos = self.draw_nodes(nn, marked_node_idx)
         for l_idx in range(len(all_nodes_pos) - 1):
             for n1_idx in range(len(all_nodes_pos[l_idx])):
                 for n2_idx in range(len(all_nodes_pos[l_idx + 1])):
@@ -24,10 +24,10 @@ class MyScene:
                                      (next_node_pos[0] - self.node_size, next_node_pos[1]),
                                      width=width)
 
-    def draw_nodes(self, nn):
-        w_stride = 60
-        h_stride = 20
-        self.node_size = 12
+    def draw_nodes(self, nn, marked_node_idx):
+        w_stride = self.w_width * 0.05
+        h_stride = self.w_height * 0.0375
+        self.node_size = self.w_height * 0.0175
         nn_len = len(nn)
         all_nodes_pos = list()
         for l_idx in range(nn_len):
@@ -38,6 +38,8 @@ class MyScene:
                 x = (self.w_width * .25) + l_idx * w_stride - 175
                 y = (self.w_height * .25) - adjust + n_idx * h_stride
                 node_color = (255, 255, 255)
+                if l_idx == (nn_len - 1) and n_idx == marked_node_idx:
+                    node_color = (255, 0, 0)
                 pygame.draw.circle(self.window, node_color, (x, y), self.node_size, width=3)
                 l_nodes_pos.append((x, y))
             all_nodes_pos.append(l_nodes_pos)
