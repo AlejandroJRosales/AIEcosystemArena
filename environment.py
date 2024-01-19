@@ -59,6 +59,7 @@ class Environment:
 						   for i in range(species_types[class_type])]
 		print(f"\t\t\tCreated {len(plants)} plant objects")
 		print(f"\t\t\tCreated {len(animals)} animals objects")
+		print(f"\t\t\tCreated {len(animals)} unique artificial neural networks")
 		return plants + animals
 
 	def generate_water(self, bodies_of_water, water_body_size):

@@ -11,7 +11,7 @@ import nndraw
 
 """
 todo:
-"I’m gonna try to build this in my simulation. I can like place large boulders then the animals will hv to figure out how to pass them. Maybe I’ll use ants instead so they can transfer information and create a better path. Almost like a path finding algorithm but with ants"
+"I'm gonna try to build this in my simulation. I can like place large boulders then the animals will hv to figure out how to pass them. Maybe I’ll use ants instead so they can transfer information and create a better path. Almost like a path finding algorithm but with ants"
 obstacles, and being able to add obstacles with touch
 save button, on screen attribute adjustments for "new simulation" feature
 SPEED attribute doesnt hv to be intilized for class even though it is being called by a function that runs
@@ -28,8 +28,8 @@ class EcosystemScene:
 		self.h = world_height
 		super(EcosystemScene, self).__init__()
 		num_plants = 50
-		num_deer = 50
-		num_wolfs = 10
+		num_deer = 40
+		num_wolfs = 8
 		self.species_types = {
 			species.Plant: num_plants,
 			species.Deer: num_deer,
