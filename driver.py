@@ -193,6 +193,7 @@ while True:
 	if keys[pygame.K_n]:
 		# quit current window
 		pygame.display.quit()
+		clock = pygame.time.Clock()
 
 		num_living_objects = len([obj for obj in ecosystem.world if isinstance(obj, species.Living)])
 		print(f"[TERMINATING {num_living_objects} LIVING OBJECTS ({ecosystem.current_size} OBJECTS TOTAL)]")
