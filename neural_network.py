@@ -5,6 +5,10 @@ from numpy import exp
 import utils
 
 
+# neural evolution augmenting topologies
+class NEAT:
+    pass
+
 class DenseNetwork:
     def __init__(self, animal):
         # TODO: tune hyperparameters
