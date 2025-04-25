@@ -1,14 +1,3 @@
-# Sets the working directory to the script's location, or defaults to a specific path if unavailable
-import os
-from pathlib import Path
-import sys
-try:
-	script_path = Path(__file__).resolve()
-except NameError:
-	script_path = Path(sys.argv[0]).resolve()
-root_path = script_path.parent if script_path else "C:/Users/Alejandro/OneDrive/Home/Personal/Programming/Python/AutonomousAIAgentsEcosystemSimulator"
-os.chdir(root_path)
-
 import ctypes
 import time
 import math
@@ -64,9 +53,7 @@ class EcosystemScene:
 		self.setup()
 
 	def setup(self):
-		if self.containerized:
-			self.set_relative_paths()
-		self.envir_func = environment.Environment(self.root_path, (self.w, self.h), proportion=self.proportion)
+		self.envir_func = environment.Environment((self.w, self.h), proportion=self.proportion)
 		self.world = self.envir_func.generate_world(
 			species_types=self.species_types,
 			bodies_of_water=self.bodies_of_water,
@@ -113,24 +100,6 @@ class EcosystemScene:
 				if kill:
 					living.die()
 				kill = not kill
-
-	def set_relative_paths(self):
-		if root_path is None:
-			from pathlib import Path
-			import sys
-			
-			try:
-				# For script execution
-				script_path = Path(__file__).resolve()
-			except NameError:
-				# For interactive mode like Jupyter or console
-				script_path = Path(sys.argv[0]).resolve()
-
-			# This will always preserve drive letters and root
-			script_dir = script_path.parent
-			self.root_path = script_dir.parent
-		else:
-			self.root_path = root_path
 
 	def display_internals(self, structure):
 		for k, v in self.envir_func.__dict__.items():

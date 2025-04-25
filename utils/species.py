@@ -11,10 +11,18 @@ from utils import neural_network as ann
 from utils.environment import Water
 from utils.social import Predator
 
+def resource_path(relative_path):
+	import sys
+	""" Get absolute path to resource, works for dev and for PyInstaller """
+	if hasattr(sys, '_MEIPASS'):
+		return os.path.join(sys._MEIPASS, relative_path)
+	return os.path.join(os.path.abspath("."), relative_path)
+
 
 class SpeciesInfo:
 	def __init__(self, config_path="assets/config/species_config.yaml"):
-		with open(config_path, "r") as file:
+		asset_path = resource_path(config_path)
+		with open(asset_path, "r") as file:
 			raw_data = yaml.safe_load(file)
 
 		self.data = self._process_config(raw_data)
@@ -48,9 +56,8 @@ class Living(pygame.sprite.Sprite):
 		pygame.sprite.Sprite.__init__(self)
 		self.world = world
 		self.birth_coord = coord
-		path_str = f"{world.root_path}/assets/images"
-		
-		self.assets_img_path = Path(path_str)
+		image_path = resource_path(f"assets/images")
+		self.assets_img_path = Path(image_path)
 		# self.assets_img_path = os.path.join(world.root_path, "data\AutonomousAIAgentsEcosystemSimulator\images")
 
 	def generate_entity(self, species_type, sexes_info):

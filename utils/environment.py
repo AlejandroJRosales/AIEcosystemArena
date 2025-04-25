@@ -6,9 +6,8 @@ from utils import tools
 
 
 class Environment:
-	def __init__(self, root_path, world_size, proportion=0.1):
+	def __init__(self, world_size, proportion=0.1):
 		print("\tSetting environment parameters...")
-		self.root_path = root_path
 		self.world_width = world_size[0]
 		self.world_height = world_size[1]
 		self.proportion = proportion
