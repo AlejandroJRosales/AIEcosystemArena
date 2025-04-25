@@ -6,7 +6,7 @@ try:
 	script_path = Path(__file__).resolve()
 except NameError:
 	script_path = Path(sys.argv[0]).resolve()
-root_path = script_path.parent if script_path else "C:/Default/Path/To/AutonomousAIAgentsEcosystemSimulator"
+root_path = script_path.parent if script_path else "C:/Users/Alejandro/OneDrive/Home/Personal/Programming/Python/AutonomousAIAgentsEcosystemSimulator"
 os.chdir(root_path)
 
 import ctypes
@@ -21,7 +21,7 @@ import nndraw
 
 
 """
-todo:
+TODO:
 "I'm gonna try to build this in my simulation. I can like place large boulders then the animals will hv to figure out how to pass them. Maybe I'll use ants instead so they can transfer information and create a better path. Almost like a path finding algorithm but with ants"
 obstacles, and being able to add obstacles with touch
 save button, on screen attribute adjustments for "new simulation" feature
@@ -39,8 +39,8 @@ class EcosystemScene:
 		self.h = world_height
 		super(EcosystemScene, self).__init__()
 		num_plants = 50
-		num_deer = 15
-		num_wolfs = 5
+		num_deer = 40
+		num_wolfs = 8
 		self.species_types = {
 			species.Plant: num_plants,
 			species.Deer: num_deer,
@@ -77,12 +77,10 @@ class EcosystemScene:
 		time.sleep(2)
 		print(f"Starting with {self.past_size} objects in world...")
 
-		'''
 		print("Starting world in...")
 		for count in range(3, 0, -1):
 			print(f"{count}...")
 			time.sleep(0.5)
-		'''
 		# self.display_internals(self.world)
 
 	def update(self):
