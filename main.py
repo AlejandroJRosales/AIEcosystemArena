@@ -25,21 +25,21 @@ add a "pause" button to stop the simulation and allow the user to interact with 
 
 
 class EcosystemScene:
-	def __init__(self, world_width, world_height, level="Small"):
-		print(f"\tSetting world parameters for \"{level}\" simulation...")
+	def __init__(self, world_width, world_height, size="Small"):
+		print(f"\tSetting world parameters for \"{size}\" sized simulation...")
 		super(EcosystemScene, self).__init__()
 		
 		self.w = world_width
 		self.h = world_height
-		self.level = level  # "Large", "Medium", "Small", or "Custom"
+		self.size = size  # "Large", "Medium", "Small", or "Custom"
 
 		# Window-based scaling factor
 		base_width = 1000
 		base_height = 800
 		scale = min(world_width / base_width, world_height / base_height)
 
-		# Settings based on level
-		if level == "Large":
+		# Settings based on size
+		if size == "Large":
 			self.proportion = 0.6
 			self.bodies_of_water = 2
 			self.water_body_size = "Large"
@@ -47,7 +47,7 @@ class EcosystemScene:
 			num_deer = int(60 * scale)
 			num_wolfs = max(2, int(16 * scale))
 
-		elif level == "Medium":
+		elif size == "Medium":
 			self.proportion = 1
 			self.bodies_of_water = 2
 			self.water_body_size = "Medium"
@@ -55,7 +55,7 @@ class EcosystemScene:
 			num_deer = int(30 * scale)
 			num_wolfs = max(1, int(8 * scale))
 
-		elif level == "Small":
+		elif size == "Small":
 			self.proportion = 1.75
 			self.bodies_of_water = 2
 			self.water_body_size = "Small"
@@ -63,7 +63,7 @@ class EcosystemScene:
 			num_deer = int(15 * scale)
 			num_wolfs = max(1, int(4 * scale))
 		
-		elif level == "Custom":
+		elif size == "Custom":
 			self.proportion = 0.9
 			self.bodies_of_water = 2
 			self.water_body_size = "Medium"
@@ -156,8 +156,8 @@ def to_hex(c):
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description="Run the ecosystem simulation.")
-parser.add_argument('--level', type=str, choices=['Small', 'Medium', 'Large'], default='Medium',
-					help='Simulation size level: Small, Medium, or Large (default: Medium)')
+parser.add_argument('--size', type=str, choices=['Small', 'Medium', 'Large'], default='Medium',
+					help='Simulation size: Small, Medium, Large, or Custom (default: Medium)')
 args = parser.parse_args()
 
 # get monitor width and height for full screen mode
@@ -166,12 +166,12 @@ args = parser.parse_args()
 # world_height = user32.GetSystemMetrics(1)
 
 # preset window size
-world_width = 900
-world_height = 800
+world_width = 850
+world_height = 600
 
 print("Starting creation of new world object...")
 # simulation setup
-ecosystem = EcosystemScene(world_width, world_height, level=args.level)
+ecosystem = EcosystemScene(world_width, world_height, size=args.size)
 
 # display setup
 screen = pygame.display.set_mode((ecosystem.w, ecosystem.h))

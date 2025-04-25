@@ -13,10 +13,10 @@ Packages `main.py` into a single executable with PyInstaller, bundling the `asse
 pyinstaller --onefile --add-data "assets;assets" --add-data "assets\config;assets\config" main.py
 ```
 
-The final executable will be `dist\main.exe`. The executable works with arguments for setting simulation size/`level` like so:
+The final executable will be `dist\main.exe`. The executable works with arguments for setting simulation `level` like so:
 
 ```
-./main.exe --level=Large
+./main.exe --size=Large
 ```
 
 ## Dependencies
