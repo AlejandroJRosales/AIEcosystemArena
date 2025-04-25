@@ -1,6 +1,8 @@
+import os
 import random
 import math
 import time
+from pathlib import Path
 import numpy as np
 import utils
 from environment import Water
@@ -57,13 +59,16 @@ class SpeciesInfo:
 			}
 		}
 
-
 class Living(pygame.sprite.Sprite):
 	def __init__(self, world, coord):
 		super(Living, self).__init__()
 		pygame.sprite.Sprite.__init__(self)
 		self.world = world
 		self.birth_coord = coord
+		path_str = f"{world.root_path}/images"
+		
+		self.assets_img_path = Path(path_str)
+		# self.assets_img_path = os.path.join(world.root_path, "data\AutonomousAIAgentsEcosystemSimulator\images")
 
 	def generate_entity(self, species_type, sexes_info):
 		self.x = self.birth_coord[0]
@@ -72,7 +77,7 @@ class Living(pygame.sprite.Sprite):
 		self.width = sexes_info[self.sex]["size"][0] * self.world.proportion
 		self.height = sexes_info[self.sex]["size"][1] * self.world.proportion
 
-		img_file_name = f"images/{self.sex}-{species_type}.png"
+		img_file_name = Path(f"{self.assets_img_path}/{self.sex}-{species_type}.png")
 		self.img = pygame.image.load(img_file_name)
 		self.img = pygame.transform.scale(self.img, (self.width, self.height))
 		self.rect = pygame.rect.Rect((self.x, self.y, self.width, self.height))

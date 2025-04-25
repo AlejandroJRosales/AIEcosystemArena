@@ -7,8 +7,9 @@ import utils
 
 
 class Environment:
-	def __init__(self, world_size, proportion=0.1):
+	def __init__(self, root_path, world_size, proportion=0.1):
 		print("\tSetting environment parameters...")
+		self.root_path = root_path
 		self.world_width = world_size[0]
 		self.world_height = world_size[1]
 		self.proportion = proportion
@@ -128,7 +129,7 @@ class Environment:
 		coord_change = walk_options[self.last_walk_idx]
 		self.x = (self.x + coord_change[0]) % self.world_width
 		self.y = (self.y + coord_change[1]) % self.world_height
-		
+
 	def generate_plant(self):
 		if random.random() <= 0.7:
 			coords = random.choice(self.soil)

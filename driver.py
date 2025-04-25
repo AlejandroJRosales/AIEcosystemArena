@@ -1,3 +1,14 @@
+# Sets the working directory to the script's location, or defaults to a specific path if unavailable
+import os
+from pathlib import Path
+import sys
+try:
+	script_path = Path(__file__).resolve()
+except NameError:
+	script_path = Path(sys.argv[0]).resolve()
+root_path = script_path.parent if script_path else "C:/Default/Path/To/AutonomousAIAgentsEcosystemSimulator"
+os.chdir(root_path)
+
 import ctypes
 import time
 import math
@@ -11,7 +22,7 @@ import nndraw
 
 """
 todo:
-"I'm gonna try to build this in my simulation. I can like place large boulders then the animals will hv to figure out how to pass them. Maybe I’ll use ants instead so they can transfer information and create a better path. Almost like a path finding algorithm but with ants"
+"I'm gonna try to build this in my simulation. I can like place large boulders then the animals will hv to figure out how to pass them. Maybe I'll use ants instead so they can transfer information and create a better path. Almost like a path finding algorithm but with ants"
 obstacles, and being able to add obstacles with touch
 save button, on screen attribute adjustments for "new simulation" feature
 SPEED attribute doesnt hv to be intilized for class even though it is being called by a function that runs
@@ -37,10 +48,11 @@ class EcosystemScene:
 		}
 		self.bodies_of_water = 2
 		self.water_body_size = "Medium"
-		self.proportion = .7
+		self.proportion = .9
 
 		self.envir_func = None
 		self.world = None
+		self.containerized = True
 		self.stopwatch = time.time()
 		self.pop_sizes_time = dict()
 		self.iterations = 0
@@ -50,9 +62,11 @@ class EcosystemScene:
 		self.last_touch_time = time.time()
 
 		self.setup()
-	
+
 	def setup(self):
-		self.envir_func = environment.Environment((self.w, self.h), proportion=self.proportion)
+		if self.containerized:
+			self.set_relative_paths()
+		self.envir_func = environment.Environment(self.root_path, (self.w, self.h), proportion=self.proportion)
 		self.world = self.envir_func.generate_world(
 			species_types=self.species_types,
 			bodies_of_water=self.bodies_of_water,
@@ -81,7 +95,7 @@ class EcosystemScene:
 		if self.displ_pop_diff and abs(self.current_size - self.past_size) >= 10:
 			print(f"Simulating {self.past_size} objects...")
 			self.past_size = self.current_size
-	
+
 	def select_obj(self, touch_coords):
 		selected_obj = None
 		closest_obj_dist = math.inf
@@ -91,7 +105,7 @@ class EcosystemScene:
 				selected_obj = obj
 				closest_obj_dist = obj_dist
 		return selected_obj
-		
+
 	def unethical_runtime_optimization(self):
 		kill = True
 		for living in self.world:
@@ -99,6 +113,24 @@ class EcosystemScene:
 				if kill:
 					living.die()
 				kill = not kill
+
+	def set_relative_paths(self):
+		if root_path is None:
+			from pathlib import Path
+			import sys
+			
+			try:
+				# For script execution
+				script_path = Path(__file__).resolve()
+			except NameError:
+				# For interactive mode like Jupyter or console
+				script_path = Path(sys.argv[0]).resolve()
+
+			# This will always preserve drive letters and root
+			script_dir = script_path.parent
+			self.root_path = script_dir.parent
+		else:
+			self.root_path = root_path
 
 	def display_internals(self, structure):
 		for k, v in self.envir_func.__dict__.items():
@@ -109,8 +141,8 @@ class EcosystemScene:
 				print(f"{k}: {v}")
 			method_list = [func for func in dir(obj) if callable(getattr(obj, func)) and func[0] != "_"]
 			print(f"methods:\n{method_list}")
-	
-		
+
+
 def to_hex(c):
 	return '{:X}{:X}{:X}'.format(c[0], c[1], c[2])
 

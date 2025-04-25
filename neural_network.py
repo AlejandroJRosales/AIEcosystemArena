@@ -1,7 +1,7 @@
 
 import random
 import math
-from numpy import exp
+import numpy as np
 import utils
 
 
@@ -15,38 +15,46 @@ class DenseNetwork:
         self.layers = animal.weights_layers
         # print(self.layers)
         self.weights = [[[random.uniform(-1, 1) for weight in range(self.layers[l_idx + 1])] for node in range(self.layers[l_idx])] for l_idx in range(len(self.layers) - 1)]
-        self.weights.append([[random.uniform(-1, 1) for weight in range(self.layers[-2])] for node in range(self.layers[-1])])
+        # self.weights.append([[random.uniform(-1, 1) for weight in range(self.layers[-2])] for node in range(self.layers[-1])])
         # print([len(l) for l in self.weights])
         self.min_update = 0.9998
         self.max_update = 1.0002
 
     @staticmethod
     def sigmoid(x):
-        return 1 / (1 + math.exp(-x))
-        
+        if x >= 0:
+            z = math.exp(-x)
+            return 1 / (1 + z)
+        else:
+            z = math.exp(x)
+            return z / (1 + z)
+
     @staticmethod
     def softmax(vector):
-        e = exp(vector)
+        e = np.exp(vector - np.max(vector))
         return e / e.sum()
 
     def propagate(self, inputs):
-        # TODO: dynmaic input weight insertion, input weight generation and insertion code comented out for
-        # self.layers.insert(0, len(inputs))
-        # input_weights = [[random.uniform(-1, 1) for weight in range(self.layers[1])] for node in range(self.layers[0])]
-        # self.weights.insert(0, input_weights)
-        sliding_layer = inputs
-        for l_idx in range(len(self.layers) - 1):
-            out_layer = [0] * self.layers[l_idx + 1]
-            for n1_idx in range(self.layers[l_idx]):
-                for n2_idx in range(self.layers[l_idx + 1]):
-                    current_node = sliding_layer[n1_idx]
-                    weight = self.weights[l_idx][n1_idx][n2_idx]
-                    out_layer[n2_idx] += current_node * weight
-            sliding_layer = out_layer
-        return self.softmax(sliding_layer)
+            if len(inputs) != self.layers[0]:
+                raise ValueError("Input size does not match network input layer size.")
+
+            sliding_layer = inputs
+            for l_idx in range(len(self.layers) - 1):
+                out_layer = [0] * self.layers[l_idx + 1]
+                for n1_idx in range(self.layers[l_idx]):
+                    for n2_idx in range(self.layers[l_idx + 1]):
+                        current_node = sliding_layer[n1_idx]
+                        weight = self.weights[l_idx][n1_idx][n2_idx]
+                        out_layer[n2_idx] += current_node * weight
+                # Add activation between layers (except output if softmax)
+                if l_idx < len(self.layers) - 2:
+                    sliding_layer = [self.sigmoid(v) for v in out_layer]
+                else:
+                    sliding_layer = out_layer
+            return self.softmax(sliding_layer)
 
     def adjust_weights(self):
-        # TODO: implement heritable learning rate aka alpha value 
+        # TODO: implement heritable learning rate aka alpha value
         alpha = self.sigmoid(self.cost) * .0001
         loc_min_update, loc_max_update = self.min_update + alpha, self.max_update + alpha
         # print(loc_min_update, loc_max_update)
@@ -59,7 +67,7 @@ class DenseNetwork:
         self.cost = health_diff
         sign = -1 if priority == "predator" else 1
         return [x, y, x2, y2, sign]
-    
+
     def think(self, curr_coord, focused_obj_coords, priority, health_diff):
         mapped_input = self.map_input(curr_coord, focused_obj_coords, priority, health_diff)
         # inputs = [self.distance_formula(self.focused_obj.x, self.focused_obj.y), self.focused_obj.x, self.focused_obj.y, self.x, self.y]
