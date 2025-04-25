@@ -181,7 +181,7 @@ clock = pygame.time.Clock()
 internal_speed = 60
 display_world = True
 selected_obj = None
-print("Now displaying world")
+print("Now displaying world\n")
 while True:
 	if display_world:
 		index = 0
