@@ -12,11 +12,14 @@ from utils.environment import Water
 from utils.social import Predator
 
 def resource_path(relative_path):
-	import sys
 	""" Get absolute path to resource, works for dev and for PyInstaller """
-	if hasattr(sys, '_MEIPASS'):
-		return os.path.join(sys._MEIPASS, relative_path)
-	return os.path.join(os.path.abspath("."), relative_path)
+	try:
+		import sys
+		# PyInstaller creates a temp folder and stores path in _MEIPASS
+		base_path = sys._MEIPASS
+	except Exception:
+		base_path = os.path.abspath(".")
+	return os.path.join(base_path, relative_path)
 
 
 class SpeciesInfo:
