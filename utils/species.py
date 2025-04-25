@@ -20,7 +20,8 @@ def resource_path(relative_path):
 
 
 class SpeciesInfo:
-	def __init__(self, config_path="assets/config/species_config.yaml"):
+	def __init__(self, config_path=None):
+		config_path = os.path.join("assets", "config", "species_config.yaml")
 		asset_path = resource_path(config_path)
 		with open(asset_path, "r") as file:
 			raw_data = yaml.safe_load(file)
@@ -56,9 +57,8 @@ class Living(pygame.sprite.Sprite):
 		pygame.sprite.Sprite.__init__(self)
 		self.world = world
 		self.birth_coord = coord
-		image_path = resource_path(f"assets/images")
+		image_path = resource_path(os.path.join("assets", "images"))
 		self.assets_img_path = Path(image_path)
-		# self.assets_img_path = os.path.join(world.root_path, "data\AutonomousAIAgentsEcosystemSimulator\images")
 
 	def generate_entity(self, species_type, sexes_info):
 		self.x = self.birth_coord[0]
