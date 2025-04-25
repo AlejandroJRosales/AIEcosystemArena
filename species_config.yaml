@@ -1,0 +1,31 @@
+deer:
+  sexes:
+    male:
+      size: [20, 30]
+    female:
+      size: [20, 30]
+  mate: Deer
+  predators: [Wolf]
+  diet: [Plant]
+  speed: random.uniform(3, 5)
+  consumption_rate: random.randint(2, 5)
+
+wolf:
+  sexes:
+    male:
+      size: [20, 30]
+    female:
+      size: [20, 30]
+  mate: Wolf
+  predators: [None]
+  diet: [Deer]
+  speed: random.uniform(3, 5)
+  consumption_rate: random.randint(30, 60)
+
+plant:
+  sexes:
+    male:
+      size: [8, 10]
+    female:
+      size: [8, 10]
+  mate: Plant

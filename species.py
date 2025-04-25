@@ -2,62 +2,46 @@ import os
 import random
 import math
 import time
-from pathlib import Path
 import numpy as np
+import pygame
+import yaml
+from pathlib import Path
 import utils
 from environment import Water
 from social import Predator
 import neural_network as ann
 import player
-import pygame
-
 
 
 class SpeciesInfo:
-	def __init__(self):
-		self.data = {
-			"deer": {
-				"sexes": {
-					"male": {
-						"size": (20, 30)
-					},
-					"female": {
-						"size": (20, 30)
-					}
-				},
-				"mate": Deer,
-				"predators": (Wolf, ),
-				"diet": (Plant, ),
-				"speed": random.uniform(3, 5),
-				"consumption rate": random.randint(2, 5)
-			},
-			"wolf": {
-				"sexes": {
-					"male": {
-						"size": (20, 30)
-					},
-					"female": {
-						"size": (20, 30)
-					}
-				},
-				"predators": (None, ),
-				"mate": Wolf,
-				"diet": (Deer, ),
-				"speed": random.uniform(3, 5),
-				"consumption rate": random.randint(30, 60)
-			},
-			"plant": {
-				"sexes": {
-					"male": {
-						"size": (8, 10)
-					},
-					"female": {
-						"size": (8, 10)
-					}
-				},
-				"mate": Plant,
-			}
+	def __init__(self, config_path="species_config.yaml"):
+		with open(config_path, "r") as file:
+			raw_data = yaml.safe_load(file)
+
+		self.data = self._process_config(raw_data)
+
+	def _process_config(self, raw_data):
+		name_to_class = {
+			"Deer": Deer,
+			"Wolf": Wolf,
+			"Plant": Plant,
+			"None": None
 		}
+
+		for species, attributes in raw_data.items():
+			# Replace class name strings with actual class objects
+			attributes["mate"] = name_to_class.get(attributes.get("mate"))
+			if "predators" in attributes:
+				attributes["predators"] = tuple(name_to_class.get(pred) for pred in attributes["predators"])
+			if "diet" in attributes:
+				attributes["diet"] = tuple(name_to_class.get(food) for food in attributes["diet"])
+
+			# Evaluate random expressions safely
+			for key, value in attributes.items():
+				if isinstance(value, str) and value.startswith("random."):
+					attributes[key] = eval(value)
+
+		return raw_data
 
 class Living(pygame.sprite.Sprite):
 	def __init__(self, world, coord):
@@ -117,7 +101,7 @@ class Animal(Living):
 		self.predators = self.species_info["predators"]
 		self.mate_pref = self.species_info["mate"]
 		self.speed = self.species_info["speed"]
-		self.consumption_rate = self.species_info["consumption rate"]
+		self.consumption_rate = self.species_info["consumption_rate"]
 		self.generate_entity(self.species_type, self.sexes_info)
 		self.obj_locations = {
 			"predator": None,
