@@ -39,8 +39,8 @@ class EcosystemScene:
 		self.h = world_height
 		super(EcosystemScene, self).__init__()
 		num_plants = 50
-		num_deer = 40
-		num_wolfs = 8
+		num_deer = 15
+		num_wolfs = 5
 		self.species_types = {
 			species.Plant: num_plants,
 			species.Deer: num_deer,
@@ -77,10 +77,12 @@ class EcosystemScene:
 		time.sleep(2)
 		print(f"Starting with {self.past_size} objects in world...")
 
+		'''
 		print("Starting world in...")
 		for count in range(3, 0, -1):
 			print(f"{count}...")
 			time.sleep(0.5)
+		'''
 		# self.display_internals(self.world)
 
 	def update(self):

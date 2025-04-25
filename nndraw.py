@@ -27,7 +27,7 @@ class MyScene:
     def draw_nodes(self, nn, marked_node_idx):
         w_stride = self.w_width * 0.05
         h_stride = self.w_height * 0.0375
-        self.node_size = self.w_height * 0.0175
+        self.node_size = self.w_height * 0.0175 * 0.5
         nn_len = len(nn)
         all_nodes_pos = list()
         for l_idx in range(nn_len):

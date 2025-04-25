@@ -87,7 +87,7 @@ class Living(pygame.sprite.Sprite):
 		return self.x, self.y
 		
 	def attacked(self, obj):
-		health_depl = self.start_health * .02
+		health_depl = self.start_health * .075
 		
 		# subtract health from self since being eaten
 		self.health -= health_depl
@@ -142,14 +142,14 @@ class Animal(Living):
 		self.food_need = round(random.uniform(0.01, 0.03), 4)
 		self.reproduction_need = round(random.uniform(0.01, 0.03), 4)
 		self.avoid_need = 0
-		self.food_increment = self.health * 0.000125
+		self.food_increment = self.health * 0.0125
 		self.water_increment = self.health * 0.0001
 		self.reproduction_increment = self.health * 0.0005
 		# self.predator_reaction = 2
 		self.last_child_tob = time.time()
 		self.child_grace_period = random.randint(50, 60)
 		self.look_for_mate = False
-		self.vision_dist = random.randint(150, 300)
+		self.vision_dist = random.randint(45000, 50000)
 		self.mutation_multi = 0.2
 		self.prob_mutation = 0.1
 		self.alive = True
