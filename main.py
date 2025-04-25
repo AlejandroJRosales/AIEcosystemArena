@@ -209,8 +209,7 @@ while True:
 			selected_obj = ecosystem.select_obj(pygame.mouse.get_pos())
 			# # display stats of object
 			# print()
-			# display.analysis_mode(selected_obj)
-			# print()
+			display.analysis_mode(selected_obj)
 			# # pause till user is ready to continue
 			# input("PRESS ENTER TO CONTINUE...")
 			# selected_obj = ecosystem.select_obj(pygame.mouse.get_pos())
@@ -246,7 +245,7 @@ while True:
 		print("[TERMINATION COMPLETE]")
 		time.sleep(2)
 		print("\n\n\nStarting creation of new world object...")
-		ecosystem = EcosystemScene(world_width, world_height)
+		ecosystem = EcosystemScene(world_width, world_height, size=args.size)
 		print("Now displaying world")
 
 		# display new window

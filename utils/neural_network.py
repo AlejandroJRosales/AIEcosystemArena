@@ -12,10 +12,9 @@ class NEAT:
 class DenseNetwork:
     def __init__(self, animal):
         # TODO: tune hyperparameters
-        self.layers = animal.weights_layers
-        # print(self.layers)
-        self.weights = [[[random.uniform(-1, 1) for weight in range(self.layers[l_idx + 1])] for node in range(self.layers[l_idx])] for l_idx in range(len(self.layers) - 1)]
-        # self.weights.append([[random.uniform(-1, 1) for weight in range(self.layers[-2])] for node in range(self.layers[-1])])
+        self.layer_dims = animal.weights_layers
+        self.weights = [[[random.uniform(-1, 1) for weight in range(self.layer_dims[l_idx + 1])] for node in range(self.layer_dims[l_idx])] for l_idx in range(len(self.layer_dims) - 1)]
+        # self.weights.append([[random.uniform(-1, 1) for weight in range(self.layer_dims[-2])] for node in range(self.layer_dims[-1])])
         # print([len(l) for l in self.weights])
         self.min_update = 0.9998
         self.max_update = 1.0002
@@ -35,19 +34,19 @@ class DenseNetwork:
         return e / e.sum()
 
     def propagate(self, inputs):
-            if len(inputs) != self.layers[0]:
+            if len(inputs) != self.layer_dims[0]:
                 raise ValueError("Input size does not match network input layer size.")
 
             sliding_layer = inputs
-            for l_idx in range(len(self.layers) - 1):
-                out_layer = [0] * self.layers[l_idx + 1]
-                for n1_idx in range(self.layers[l_idx]):
-                    for n2_idx in range(self.layers[l_idx + 1]):
+            for l_idx in range(len(self.layer_dims) - 1):
+                out_layer = [0] * self.layer_dims[l_idx + 1]
+                for n1_idx in range(self.layer_dims[l_idx]):
+                    for n2_idx in range(self.layer_dims[l_idx + 1]):
                         current_node = sliding_layer[n1_idx]
                         weight = self.weights[l_idx][n1_idx][n2_idx]
                         out_layer[n2_idx] += current_node * weight
                 # Add activation between layers (except output if softmax)
-                if l_idx < len(self.layers) - 2:
+                if l_idx < len(self.layer_dims) - 2:
                     sliding_layer = [self.sigmoid(v) for v in out_layer]
                 else:
                     sliding_layer = out_layer

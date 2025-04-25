@@ -112,7 +112,7 @@ class Animal(Living):
 		self.speed = self.species_info["speed"]
 		self.consumption_rate = self.species_info["consumption_rate"]
 		self.generate_entity(self.species_type, self.sexes_info)
-		self.obj_locations = {
+		self.memory = {
 			"predator": None,
 			"food": None,
 			"water": None,
@@ -177,7 +177,7 @@ class Animal(Living):
 		self.rect.center = (self.x, self.y)
 
 	def focus(self, obj, type):
-		self.obj_locations[type] = (obj.x, obj.y)
+		self.memory[type] = (obj.x, obj.y)
 		self.is_focused = True
 
 	def transpose_focused_coords(self):
@@ -260,7 +260,7 @@ class Animal(Living):
 
 			# starts with first priority
 			for need in self.priority_dict.keys():
-				self.obj_location = self.obj_locations[need]
+				self.obj_location = self.memory[need]
 				# if self knows location of priority and thus location not none go to coords
 				if self.obj_location is not None:
 					self.priority = need
@@ -301,17 +301,17 @@ class Animal(Living):
 		) - self.last_child_tob >= self.child_grace_period
 		
 	def update_memory(self):
-		# self.obj_locations = {
+		# self.memory = {
 		#	"predator": None,
 		#	"food": None,
 		#	"water": None,
 		#	"mate": None
 		# }
 		# if the object is farther than the animal can see
-		for obj_key in self.obj_locations.keys():
-			obj_loc = self.obj_locations[obj_key]
+		for obj_key in self.memory.keys():
+			obj_loc = self.memory[obj_key]
 			if obj_loc is not None and tools.distance_formula(self.x, self.y, obj_loc[0], obj_loc[0]) <= self.vision_dist:
-				self.obj_locations[obj_key] = None
+				self.memory[obj_key] = None
 
 	def update_body(self):
 		self.is_exploring = not self.is_focused
