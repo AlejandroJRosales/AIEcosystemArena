@@ -5,7 +5,14 @@ Agents hunt, drink, reproduce, and avoid predators — all driven by evolving tr
 
 The result? Emergent behavior in a world that grows with them.
 
-Packages `main.py` into a single executable with PyInstaller, bundling the `assets` and `assets/config` folders into the final build.
+Packages `main.py` into a single executable with PyInstaller, bundling the `assets` and `assets/config` folders into the final build for the OS you run the command on (run on Windows for windows exe, etc.):
+
 ```
 pyinstaller --onefile --add-data "assets;assets" --add-data "assets\config;assets\config" main.py
+```
+
+I used Python 3.9 during development. Run the following command to install library dependencies:
+
+```
+pip install -r requirements.txt
 ```

@@ -161,13 +161,13 @@ parser.add_argument('--level', type=str, choices=['Small', 'Medium', 'Large'], d
 args = parser.parse_args()
 
 # get monitor width and height for full screen mode
-user32 = ctypes.windll.user32
-world_width = user32.GetSystemMetrics(0)
-world_height = user32.GetSystemMetrics(1)
+# user32 = ctypes.windll.user32
+# world_width = user32.GetSystemMetrics(0)
+# world_height = user32.GetSystemMetrics(1)
 
 # preset window size
-# world_width = 900
-# world_height = 800
+world_width = 900
+world_height = 800
 
 print("Starting creation of new world object...")
 # simulation setup
