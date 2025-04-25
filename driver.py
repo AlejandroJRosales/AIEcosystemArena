@@ -6,7 +6,7 @@ try:
 	script_path = Path(__file__).resolve()
 except NameError:
 	script_path = Path(sys.argv[0]).resolve()
-root_path = script_path.parent if script_path else "C:/Users/Alejandro/OneDrive/Home/Personal/Programming/Python/AutonomousAIAgentsEcosystemSimulator"
+root_path = script_path.parent if script_path else "C:/Users/PathTo/AutonomousAIAgentsEcosystemSimulator"
 os.chdir(root_path)
 
 import ctypes
