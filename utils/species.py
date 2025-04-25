@@ -6,15 +6,14 @@ import numpy as np
 import pygame
 import yaml
 from pathlib import Path
-import utils
-from environment import Water
-from social import Predator
-import neural_network as ann
-import player
+from utils import tools
+from utils import neural_network as ann
+from utils.environment import Water
+from utils.social import Predator
 
 
 class SpeciesInfo:
-	def __init__(self, config_path="species_config.yaml"):
+	def __init__(self, config_path="assets/config/species_config.yaml"):
 		with open(config_path, "r") as file:
 			raw_data = yaml.safe_load(file)
 
@@ -49,7 +48,7 @@ class Living(pygame.sprite.Sprite):
 		pygame.sprite.Sprite.__init__(self)
 		self.world = world
 		self.birth_coord = coord
-		path_str = f"{world.root_path}/images"
+		path_str = f"{world.root_path}/assets/images"
 		
 		self.assets_img_path = Path(path_str)
 		# self.assets_img_path = os.path.join(world.root_path, "data\AutonomousAIAgentsEcosystemSimulator\images")
@@ -151,7 +150,7 @@ class Animal(Living):
 		self.output = None
 
 	def neighbors(self, objs):
-		return [obj for obj in objs if utils.distance_formula(self.x, self.y, obj.x, obj.y) <= self.vision_dist and id(self) != id(obj)]
+		return [obj for obj in objs if tools.distance_formula(self.x, self.y, obj.x, obj.y) <= self.vision_dist and id(self) != id(obj)]
 
 	def normalize_direction_focused(self):
 		v = np.subtract((self.coords_focused.x, self.coords_focused.y), (self.x, self.y))
@@ -187,9 +186,9 @@ class Animal(Living):
 			"mate": math.inf
 		}
 		
-		# neighboring_predators = [obj for obj in objs if utils.distance_formula(self.x, self.y, obj.x, obj.y) <= self.vision_dist * 0.3]
+		# neighboring_predators = [obj for obj in objs if tools.distance_formula(self.x, self.y, obj.x, obj.y) <= self.vision_dist * 0.3]
 		for obj in objs:
-			obj_dist = utils.distance_formula(self.x, self.y, obj.x, obj.y)
+			obj_dist = tools.distance_formula(self.x, self.y, obj.x, obj.y)
 			
 			"""
 			wx = self.world.x
@@ -275,10 +274,10 @@ class Animal(Living):
 				self.move(agents_choice)
 
 	def update_resources_need(self):
-		# self.water_need = utils.clamp(self.water_need + self.water_increment, 0, 1)
-		# self.food_need = utils.clamp(self.food_need + self.food_increment, 0, 1)
+		# self.water_need = tools.clamp(self.water_need + self.water_increment, 0, 1)
+		# self.food_need = tools.clamp(self.food_need + self.food_increment, 0, 1)
 		# if not looking for mate set reproduction to 0
-		# self.reproduction_need = utils.clamp(self.reproduction_need + self.reproduction_increment, 0, 1) if self.look_for_mate else 0
+		# self.reproduction_need = tools.clamp(self.reproduction_need + self.reproduction_increment, 0, 1) if self.look_for_mate else 0
 		
 		self.water_need = self.water_need + self.water_increment
 		self.food_need = self.food_need + self.food_increment
@@ -301,7 +300,7 @@ class Animal(Living):
 		# if the object is farther than the animal can see
 		for obj_key in self.obj_locations.keys():
 			obj_loc = self.obj_locations[obj_key]
-			if obj_loc is not None and utils.distance_formula(self.x, self.y, obj_loc[0], obj_loc[0]) <= self.vision_dist:
+			if obj_loc is not None and tools.distance_formula(self.x, self.y, obj_loc[0], obj_loc[0]) <= self.vision_dist:
 				self.obj_locations[obj_key] = None
 
 	def update_body(self):
@@ -311,7 +310,7 @@ class Animal(Living):
 		self.update_resources_need()
 		self.update_internal_clocks()
 		self.update_memory()
-		if utils.in_range(self.x, self.y, self.coords_focused.x, self.coords_focused.y, 7) or random.random() <= 0.001:
+		if tools.in_range(self.x, self.y, self.coords_focused.x, self.coords_focused.y, 7) or random.random() <= 0.001:
 			self.new_explore_coords()
 		self.health -= (time.time() - self.tob) * self.age_depl
 		self.health -= self.water_need * 0.0001

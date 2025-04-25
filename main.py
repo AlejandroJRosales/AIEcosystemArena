@@ -6,18 +6,18 @@ try:
 	script_path = Path(__file__).resolve()
 except NameError:
 	script_path = Path(sys.argv[0]).resolve()
-root_path = script_path.parent if script_path else "C:/Users/PathTo/AutonomousAIAgentsEcosystemSimulator"
+root_path = script_path.parent if script_path else "C:/Users/Alejandro/OneDrive/Home/Personal/Programming/Python/AutonomousAIAgentsEcosystemSimulator"
 os.chdir(root_path)
 
 import ctypes
 import time
 import math
 import pygame
-import species
-import environment
-import utils
-import display
-import nndraw
+from utils import species
+from utils import environment
+from utils import tools
+from utils import display
+from utils import nndraw
 
 
 """
@@ -100,7 +100,7 @@ class EcosystemScene:
 		selected_obj = None
 		closest_obj_dist = math.inf
 		for obj in self.world:
-			obj_dist = utils.distance_formula(touch_coords[0], touch_coords[1], obj.x, obj.y)
+			obj_dist = tools.distance_formula(touch_coords[0], touch_coords[1], obj.x, obj.y)
 			if isinstance(obj, species.Living) and obj_dist < closest_obj_dist:
 				selected_obj = obj
 				closest_obj_dist = obj_dist

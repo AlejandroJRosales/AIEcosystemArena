@@ -1,9 +1,8 @@
-import random
-import species
-import pygame
 import math
-
-import utils
+import random
+import pygame
+from utils import species
+from utils import tools
 
 
 class Environment:
@@ -86,7 +85,7 @@ class Environment:
 		for row in range(self.w_num_chunks):
 			for col in range(self.h_num_chunks):
 				collided_water = [rect for rect in water_rect if
-								  utils.in_range(
+								  tools.in_range(
 									  self.w_chunk_size * row,
 									  self.h_chunk_size * col,
 									  rect.x,

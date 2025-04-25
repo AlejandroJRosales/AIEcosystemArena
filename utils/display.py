@@ -1,8 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import species
-import utils
-from neural_network import DenseNetwork
+from utils import species
+from utils.neural_network import DenseNetwork
 
 
 def text_pop_sizes(world):
