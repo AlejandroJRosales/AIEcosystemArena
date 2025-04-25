@@ -1,4 +1,5 @@
 import ctypes
+import argparse
 import time
 import math
 import pygame
@@ -18,26 +19,63 @@ SPEED attribute doesnt hv to be intilized for class even though it is being call
 endurance. costs more food. pass on trait for when to run/ walk
 group forming to hunt using nns w/ position of others and self
 have plants grow only on soil
+time of day, seasons, weather, and how they affect the world
+add a "pause" button to stop the simulation and allow the user to interact with the world
 """
 
 
 class EcosystemScene:
-	def __init__(self, world_width, world_height):
-		print("\tSetting world parameters...")
+	def __init__(self, world_width, world_height, level="Small"):
+		print(f"\tSetting world parameters for \"{level}\" simulation...")
+		super(EcosystemScene, self).__init__()
+		
 		self.w = world_width
 		self.h = world_height
-		super(EcosystemScene, self).__init__()
-		num_plants = 50
-		num_deer = 40
-		num_wolfs = 8
+		self.level = level  # "Large", "Medium", "Small", or "Custom"
+
+		# Window-based scaling factor
+		base_width = 1000
+		base_height = 800
+		scale = min(world_width / base_width, world_height / base_height)
+
+		# Settings based on level
+		if level == "Large":
+			self.proportion = 0.6
+			self.bodies_of_water = 2
+			self.water_body_size = "Large"
+			num_plants = int(80 * scale)
+			num_deer = int(60 * scale)
+			num_wolfs = max(2, int(16 * scale))
+
+		elif level == "Medium":
+			self.proportion = 1
+			self.bodies_of_water = 2
+			self.water_body_size = "Medium"
+			num_plants = int(40 * scale)
+			num_deer = int(30 * scale)
+			num_wolfs = max(1, int(8 * scale))
+
+		elif level == "Small":
+			self.proportion = 1.75
+			self.bodies_of_water = 2
+			self.water_body_size = "Small"
+			num_plants = int(20 * scale)
+			num_deer = int(15 * scale)
+			num_wolfs = max(1, int(4 * scale))
+		
+		elif level == "Custom":
+			self.proportion = 0.9
+			self.bodies_of_water = 2
+			self.water_body_size = "Medium"
+			num_plants = int(50 * scale)
+			num_deer = int(40 * scale)
+			num_wolfs = max(1, int(8 * scale))
+
 		self.species_types = {
 			species.Plant: num_plants,
 			species.Deer: num_deer,
 			species.Wolf: num_wolfs
 		}
-		self.bodies_of_water = 2
-		self.water_body_size = "Medium"
-		self.proportion = .9
 
 		self.envir_func = None
 		self.world = None
@@ -116,23 +154,29 @@ def to_hex(c):
 	return '{:X}{:X}{:X}'.format(c[0], c[1], c[2])
 
 
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description="Run the ecosystem simulation.")
+parser.add_argument('--level', type=str, choices=['Small', 'Medium', 'Large'], default='Medium',
+					help='Simulation size level: Small, Medium, or Large (default: Medium)')
+args = parser.parse_args()
+
 # get monitor width and height for full screen mode
-# user32 = ctypes.windll.user32
-# world_width = user32.GetSystemMetrics(0)
-# world_height = user32.GetSystemMetrics(1)
+user32 = ctypes.windll.user32
+world_width = user32.GetSystemMetrics(0)
+world_height = user32.GetSystemMetrics(1)
 
 # preset window size
-world_width = 850
-world_height = 500
+# world_width = 900
+# world_height = 800
 
 print("Starting creation of new world object...")
 # simulation setup
-ecosystem = EcosystemScene(world_width, world_height)
+ecosystem = EcosystemScene(world_width, world_height, level=args.level)
 
 # display setup
 screen = pygame.display.set_mode((ecosystem.w, ecosystem.h))
 nnd = nndraw.MyScene(screen, (ecosystem.w, ecosystem.h))
-pygame.display.set_caption('EcosystemScene')
+pygame.display.set_caption('Ecosystem Simulation')
 clock = pygame.time.Clock()
 internal_speed = 60
 display_world = True
