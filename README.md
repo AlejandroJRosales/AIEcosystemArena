@@ -4,3 +4,8 @@ AI Ecosystem Arena is a biologically-inspired simulation of life where autonomou
 Agents hunt, drink, reproduce, and avoid predators — all driven by evolving traits and reinforcement learning. Health is their lifeblood and currency: eat to thrive, learn to survive, mutate to adapt.
 
 The result? Emergent behavior in a world that grows with them.
+
+Packages `main.py` into a single executable with PyInstaller, bundling the `assets` and `assets/config` folders into the final build.
+```
+pyinstaller --onefile --add-data "assets;assets" --add-data "assets\config;assets\config" main.py
+```
