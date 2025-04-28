@@ -43,25 +43,25 @@ class EcosystemScene:
 			self.proportion = 0.6
 			self.bodies_of_water = 2
 			self.water_body_size = "Large"
-			num_plants = int(80 * scale)
-			num_deer = int(60 * scale)
-			num_wolfs = max(2, int(16 * scale))
+			num_plants = int(160 * scale)
+			num_deer = int(120 * scale)
+			num_wolfs = max(4, int(12 * scale))
 
 		elif size == "Medium":
 			self.proportion = 1
 			self.bodies_of_water = 2
 			self.water_body_size = "Medium"
-			num_plants = int(40 * scale)
-			num_deer = int(30 * scale)
-			num_wolfs = max(1, int(8 * scale))
+			num_plants = int(80 * scale)
+			num_deer = int(60 * scale)
+			num_wolfs = max(2, int(10 * scale))
 
 		elif size == "Small":
 			self.proportion = 1.75
 			self.bodies_of_water = 2
 			self.water_body_size = "Small"
-			num_plants = int(20 * scale)
-			num_deer = int(15 * scale)
-			num_wolfs = max(1, int(4 * scale))
+			num_plants = int(40 * scale)
+			num_deer = int(30 * scale)
+			num_wolfs = max(2, int(5 * scale))
 		
 		elif size == "Custom":
 			self.proportion = 0.9
@@ -70,6 +70,9 @@ class EcosystemScene:
 			num_plants = int(50 * scale)
 			num_deer = int(40 * scale)
 			num_wolfs = max(1, int(8 * scale))
+
+		else:
+			raise ValueError("Invalid size. Choose from 'Large', 'Medium', 'Small', or 'Custom'.")
 
 		self.species_types = {
 			species.Plant: num_plants,
@@ -177,7 +180,7 @@ parser.add_argument('--size', type=str, choices=['Small', 'Medium', 'Large'], de
 					help='Simulation size: Small, Medium, Large, or Custom (default: Medium)')
 args = parser.parse_args()
 sim_size = "Large"
-sim_size = args.size.capitalize()
+sim_size = sim_size.capitalize()
 
 pygame.init()
 pygame.font.init()
@@ -270,7 +273,7 @@ while True:
 		print("[TERMINATION COMPLETE]")
 		time.sleep(2)
 		print("\n\n\nStarting creation of new world object...")
-		ecosystem = EcosystemScene(world_width, world_height, size=args.size)
+		ecosystem = EcosystemScene(world_width, world_height, size=sim_size)
 		print("Now displaying world")
 
 		# display new window
@@ -293,7 +296,7 @@ while True:
 	ecosystem.update()
 
 	if display_world and selected_obj is not None and isinstance(selected_obj, species.Animal):
-		nnd.draw(selected_obj.brain, selected_obj.output_idx)
+		nnd.draw(screen, selected_obj.brain, selected_obj.output_idx)
 
 	pygame.display.update()
 

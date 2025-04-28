@@ -8,7 +8,7 @@ class MyScene:
         self.w_height = screen_size[1]
         self.node_size = 15
 
-    def draw(self, nn, marked_node_idx):
+    def draw(self, screen, nn, marked_node_idx):
         font = pygame.font.SysFont('arial', 36)
         if hasattr(nn, 'weights'):
             net_type = "DenseNetwork"
@@ -18,10 +18,10 @@ class MyScene:
             net_type = "UnknownNetwork"
         text_surface = font.render(net_type, True, (255, 255, 255))  # White color
         text_rect = text_surface.get_rect(center=(self.w_width // 2, 30))  # Centered near top
-        self.window.blit(text_surface, text_rect)
+        screen.blit(text_surface, text_rect)
 
         # --- Draw nodes and edges ---
-        all_nodes_pos = self.draw_nodes(nn, marked_node_idx)
+        all_nodes_pos = self.draw_nodes(screen, nn, marked_node_idx)
         weights = self.extract_weights(nn)
         min_weight, max_weight = self.get_weight_range(weights)
 
@@ -35,13 +35,13 @@ class MyScene:
                     scaled_weight = (weight - min_weight) / (max_weight - min_weight) if max_weight != min_weight else 0.5
                     line_color = self.get_weight_color(weight, scaled_weight)
                     width = max(1, int(abs(weight) // 1))
-                    pygame.draw.line(self.window,
+                    pygame.draw.line(screen,
                                     line_color,
                                     (current_node_pos[0] + self.node_size, current_node_pos[1]),
                                     (next_node_pos[0] - self.node_size, next_node_pos[1]),
                                     width=width)
 
-    def draw_nodes(self, nn, marked_node_idx):
+    def draw_nodes(self, screen, nn, marked_node_idx):
         layer_dims = self.get_layer_dims(nn)
         w_stride = self.w_width * 0.05
         h_stride = self.w_height * 0.0375
@@ -59,7 +59,7 @@ class MyScene:
                 node_color = (255, 255, 255)
                 if l_idx == (nn_len - 1) and n_idx == marked_node_idx:
                     node_color = (255, 0, 0)
-                pygame.draw.circle(self.window, node_color, (x, y), self.node_size, width=3)
+                pygame.draw.circle(screen, node_color, (x, y), self.node_size, width=3)
                 l_nodes_pos.append((x, y))
             all_nodes_pos.append(l_nodes_pos)
         return all_nodes_pos
