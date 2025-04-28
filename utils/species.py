@@ -60,6 +60,7 @@ class Living(pygame.sprite.Sprite):
 		pygame.sprite.Sprite.__init__(self)
 		self.world = world
 		self.birth_coord = coord
+		self.tob = time.time()
 		image_path = resource_path(os.path.join("assets", "images"))
 		self.assets_img_path = Path(image_path)
 
@@ -130,7 +131,6 @@ class Animal(Living):
 		self.age_depl = self.start_health * 0.00002
 		self.water_depl = self.start_health * 0.001
 		self.food_depl = self.start_health * 0.001
-		self.tob = time.time()
 		self.water_need = round(random.uniform(0.01, 0.03), 4)
 		self.food_need = round(random.uniform(0.01, 0.03), 4)
 		self.reproduction_need = round(random.uniform(0.01, 0.03), 4)
@@ -142,7 +142,7 @@ class Animal(Living):
 		self.last_child_tob = time.time()
 		self.child_grace_period = random.randint(50, 60)
 		self.look_for_mate = False
-		self.vision_dist = random.randint(45000, 50000)
+		self.vision_dist = random.randint(15, 100) * self.world.proportion
 		self.mutation_multi = 0.2
 		self.prob_mutation = 0.1
 		self.alive = True
@@ -279,10 +279,12 @@ class Animal(Living):
 					self,
 					
 				)
-				self.output_idx = agents_choice
-				# print(agents_choice)
-				# go to location
-				self.move(agents_choice)
+			else:
+				# if no obj found then move randomly
+				agents_choice = random.randint(0, len(self.coord_changes) - 1)
+			# go to location
+			self.output_idx = agents_choice
+			self.move(self.output_idx)
 
 	def update_resources_need(self):
 		# self.water_need = tools.clamp(self.water_need + self.water_increment, 0, 1)

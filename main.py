@@ -131,13 +131,23 @@ class EcosystemScene:
 				closest_obj_dist = obj_dist
 		return selected_obj
 
-	def unethical_runtime_optimization(self):
-		kill = True
-		for living in self.world:
-			if isinstance(living, species.Living):
-				if kill:
-					living.die()
-				kill = not kill
+	def draw_transparent_circle(self, screen, selected_obj):
+		if isinstance(selected_obj, species.Animal):
+			# Define the center (x, y) and radius (vision_dist) from the selected object
+			x, y = selected_obj.x, selected_obj.y
+			radius = selected_obj.vision_dist
+
+			# Define the color with alpha (0.3 for transparency)
+			circle_color = (34, 139, 34, 0)
+
+			# Create a new surface with the same size as the window and an alpha channel
+			circle_surface = pygame.Surface((self.w, self.h), pygame.SRCALPHA)  # Use SRCALPHA for transparency
+
+			# Draw the circle on this new surface
+			pygame.draw.circle(circle_surface, circle_color, (x + (selected_obj.width / 2), y + (selected_obj.height / 2)), radius)
+
+			# Blit the surface onto the main window
+			screen.blit(circle_surface, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
 
 	def display_internals(self, structure):
 		for k, v in self.envir_func.__dict__.items():
@@ -149,6 +159,13 @@ class EcosystemScene:
 			method_list = [func for func in dir(obj) if callable(getattr(obj, func)) and func[0] != "_"]
 			print(f"methods:\n{method_list}")
 
+	def unethical_runtime_optimization(self):
+		kill = True
+		for living in self.world:
+			if isinstance(living, species.Living):
+				if kill:
+					living.die()
+				kill = not kill
 
 def to_hex(c):
 	return '{:X}{:X}{:X}'.format(c[0], c[1], c[2])
@@ -159,6 +176,8 @@ parser = argparse.ArgumentParser(description="Run the ecosystem simulation.")
 parser.add_argument('--size', type=str, choices=['Small', 'Medium', 'Large'], default='Medium',
 					help='Simulation size: Small, Medium, Large, or Custom (default: Medium)')
 args = parser.parse_args()
+sim_size = "Large"
+sim_size = args.size.capitalize()
 
 pygame.init()
 pygame.font.init()
@@ -174,7 +193,7 @@ world_height = 600
 
 print("Starting creation of new world object...")
 # simulation setup
-ecosystem = EcosystemScene(world_width, world_height, size=args.size)
+ecosystem = EcosystemScene(world_width, world_height, size=sim_size)
 
 # display setup
 screen = pygame.display.set_mode((ecosystem.w, ecosystem.h))
@@ -220,18 +239,22 @@ while True:
 	# checking pressed held
 	keys = pygame.key.get_pressed()
 	if selected_obj is not None:
-		if keys[pygame.K_w]:
-			selected_obj.move(coord_change=(0, -1))
-		if keys[pygame.K_s]:
-			selected_obj.move(coord_change=(0, 1))
-		if keys[pygame.K_a]:
-			selected_obj.move(coord_change=(-1, 0))
-		if keys[pygame.K_d]:
-			selected_obj.move(coord_change=(1, 0))
-
-		if keys[pygame.K_ESCAPE]:
-			selected_obj.is_player = None
+		ecosystem.draw_transparent_circle(screen, selected_obj)
+		if not selected_obj.alive:
+			# if living died
 			selected_obj = None
+		# if keys[pygame.K_w]:
+		# 	selected_obj.move(coord_change=(0, -1))
+		# if keys[pygame.K_s]:
+		# 	selected_obj.move(coord_change=(0, 1))
+		# if keys[pygame.K_a]:
+		# 	selected_obj.move(coord_change=(-1, 0))
+		# if keys[pygame.K_d]:
+		# 	selected_obj.move(coord_change=(1, 0))
+
+		# if keys[pygame.K_ESCAPE]:
+		# 	selected_obj.is_player = None
+		# 	selected_obj = None
 
 	if keys[pygame.K_t]:
 		ecosystem.unethical_runtime_optimization()
