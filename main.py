@@ -160,6 +160,9 @@ parser.add_argument('--size', type=str, choices=['Small', 'Medium', 'Large'], de
 					help='Simulation size: Small, Medium, Large, or Custom (default: Medium)')
 args = parser.parse_args()
 
+pygame.init()
+pygame.font.init()
+
 # get monitor width and height for full screen mode
 # user32 = ctypes.windll.user32
 # world_width = user32.GetSystemMetrics(0)
@@ -178,7 +181,7 @@ screen = pygame.display.set_mode((ecosystem.w, ecosystem.h))
 nnd = nndraw.MyScene(screen, (ecosystem.w, ecosystem.h))
 pygame.display.set_caption('Ecosystem Simulation')
 clock = pygame.time.Clock()
-internal_speed = 60
+internal_speed = 50
 display_world = True
 selected_obj = None
 print("Now displaying world\n")
@@ -207,11 +210,10 @@ while True:
 		if event.type == pygame.MOUSEBUTTONUP:
 			# # get object closest to where user clicked
 			selected_obj = ecosystem.select_obj(pygame.mouse.get_pos())
+			
 			# # display stats of object
-			# print()
-			display.analysis_mode(selected_obj)
-			# # pause till user is ready to continue
-			# input("PRESS ENTER TO CONTINUE...")
+			# display.analysis_mode(selected_obj)
+			
 			# selected_obj = ecosystem.select_obj(pygame.mouse.get_pos())
 			# selected_obj.is_player = True
 
@@ -268,7 +270,7 @@ while True:
 	ecosystem.update()
 
 	if display_world and selected_obj is not None and isinstance(selected_obj, species.Animal):
-				nnd.draw(selected_obj.brain.weights, selected_obj.output_idx)
+		nnd.draw(selected_obj.brain, selected_obj.output_idx)
 
 	pygame.display.update()
 

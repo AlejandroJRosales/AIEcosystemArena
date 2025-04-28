@@ -156,7 +156,7 @@ class Animal(Living):
 		self.coord_changes = [(self.speed, 0), (-self.speed, 0), (0, self.speed), (0, -self.speed), (self.speed, self.speed), (self.speed, -self.speed), (-self.speed, self.speed), (-self.speed, -self.speed)]
 		self.num_inputs = 6 # TODO: map dynamic inpput dim
 		self.weights_layers = [self.num_inputs, 5, 4, 5, len(self.coord_changes)]
-		self.brain = ann.DenseNetwork(self)
+		self.brain = random.choice([ann.DenseNetwork, ann.LSTMNetwork])(self)
 		self.output = None
 
 	def neighbors(self, objs):
