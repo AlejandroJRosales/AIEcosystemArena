@@ -87,7 +87,7 @@ class Living(pygame.sprite.Sprite):
 		self.check()
 		if isinstance(self, Animal) and isinstance(predator, Animal) and not self.alive:
 			# if prey or self dead, add to health of predator or predator since animal is dead
-			print(f"{predator.species_type} {predator.x}, {predator.y} attacked {self} {self.x}, {self.y}")
+			# print(f"{predator.species_type} {predator.x}, {predator.y} attacked {self} {self.x}, {self.y}")
 			predator.health += self.start_health
 			predator.food_need -= self.start_health
 		if isinstance(self, Plant) and isinstance(predator, Animal):

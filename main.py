@@ -179,7 +179,7 @@ parser = argparse.ArgumentParser(description="Run the ecosystem simulation.")
 parser.add_argument('--size', type=str, choices=['Small', 'Medium', 'Large'], default='Medium',
 					help='Simulation size: Small, Medium, Large, or Custom (default: Medium)')
 args = parser.parse_args()
-sim_size = argparse.capitalize()
+sim_size = args.size.capitalize()
 
 pygame.init()
 pygame.font.init()
