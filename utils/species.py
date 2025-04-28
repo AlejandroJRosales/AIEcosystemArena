@@ -154,7 +154,7 @@ class Animal(Living):
 
 		# brain
 		self.coord_changes = [(self.speed, 0), (-self.speed, 0), (0, self.speed), (0, -self.speed), (self.speed, self.speed), (self.speed, -self.speed), (-self.speed, self.speed), (-self.speed, -self.speed)]
-		self.num_inputs = 5
+		self.num_inputs = 6 # TODO: map dynamic inpput dim
 		self.weights_layers = [self.num_inputs, 5, 4, 5, len(self.coord_changes)]
 		self.brain = ann.DenseNetwork(self)
 		self.output = None
@@ -273,11 +273,12 @@ class Animal(Living):
 					break
 
 			# feed obj_locations, priorities, and difference in health as cost function through nn
-			health_diff = self.health - self.start_health
-			curr_coord = (self.x, self.y)
 			focused_obj_coords = self.obj_location
 			if focused_obj_coords is not None:
-				agents_choice = self.brain.think(curr_coord, focused_obj_coords, self.priority, health_diff)
+				agents_choice = self.brain.think(
+					self,
+					
+				)
 				self.output_idx = agents_choice
 				# print(agents_choice)
 				# go to location

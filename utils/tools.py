@@ -1,7 +1,13 @@
 from math import exp, sqrt
 
 
-def distance_formula(x1, y1, x2, y2):
+def distance_formula(x1, y1, x2, y2, mw=None, mh=None):
+	if mw is not None and mh is not None:
+		x1 = x1 % mw
+		y1 = y1 % mh
+		x2 = x2 % mw
+		y2 = y2 % mh
+		return sqrt(((x2 - x1) % mw)**2 + ((y2 - y1) % mh)**2)
 	return sqrt(((x2 - x1)**2) + ((y2 - y1)**2))
 
 

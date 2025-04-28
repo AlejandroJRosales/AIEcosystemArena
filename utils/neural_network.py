@@ -2,7 +2,7 @@
 import random
 import math
 import numpy as np
-import utils
+from utils import tools
 
 
 # neural evolution augmenting topologies
@@ -53,22 +53,21 @@ class DenseNetwork:
             return self.softmax(sliding_layer)
 
     def adjust_weights(self):
-        # TODO: implement heritable learning rate aka alpha value
         alpha = self.sigmoid(self.cost) * .0001
         loc_min_update, loc_max_update = self.min_update + alpha, self.max_update + alpha
         # print(loc_min_update, loc_max_update)
         self.weights = [[[weight * random.uniform(loc_min_update, loc_max_update) for weight in node] for node in layer] for layer in self.weights]
 
-    def map_input(self, curr_coord, focused_obj_coords, priority, health_diff):
-        x, y = curr_coord[0], curr_coord[1]
-        x2, y2 = focused_obj_coords[0], focused_obj_coords[1]
-        # dist = utils.distance_formula(x, y, focused_obj_coords[0], focused_obj_coords[1])
+    def map_input(self, self_agent):
+        health_diff = self_agent.health - self_agent.start_health
+        x_relative = abs(self_agent.x - self_agent.coords_focused.x) % self_agent.world.world_width / self_agent.world.world_width
+        y_relative = abs(self_agent.y - self_agent.coords_focused.y) % self_agent.world.world_height / self_agent.world.world_height
         self.cost = health_diff
-        sign = -1 if priority == "predator" else 1
-        return [x, y, x2, y2, sign]
+        sign = -1 if self_agent.priority == "predator" else 1
+        return [x_relative, y_relative, sign, self_agent.food_need, self_agent.water_need, self_agent.reproduction_need]
 
-    def think(self, curr_coord, focused_obj_coords, priority, health_diff):
-        mapped_input = self.map_input(curr_coord, focused_obj_coords, priority, health_diff)
+    def think(self, self_agent):
+        mapped_input = self.map_input(self_agent)
         # inputs = [self.distance_formula(self.focused_obj.x, self.focused_obj.y), self.focused_obj.x, self.focused_obj.y, self.x, self.y]
         values = list(self.propagate(mapped_input))
         self.output = max(range(len(values)), key=values.__getitem__)
