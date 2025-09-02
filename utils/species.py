@@ -162,7 +162,7 @@ class Animal(Living):
 		self.output = None
 
 	def neighbors(self, predators):
-		return [predator for predator in predators if tools.distance_formula(self.x, self.y, predator.x, predator.y) <= self.vision_dist and id(self) != id(predator)]
+		return [predator for predator in predators if tools.distance(self.x, self.y, predator.x, predator.y) <= self.vision_dist and id(self) != id(predator)]
 
 	def normalize_direction_focused(self):
 		v = np.subtract((self.coords_focused.x, self.coords_focused.y), (self.x, self.y))
@@ -198,9 +198,9 @@ class Animal(Living):
 			"mate": math.inf
 		}
 		
-		# neighboring_predators = [predator for predator in predators if tools.distance_formula(self.x, self.y, predator.x, predator.y) <= self.vision_dist * 0.3]
+		# neighboring_predators = [predator for predator in predators if tools.distance(self.x, self.y, predator.x, predator.y) <= self.vision_dist * 0.3]
 		for predator in predators:
-			predator_dist = tools.distance_formula(self.x, self.y, predator.x, predator.y)
+			predator_dist = tools.distance(self.x, self.y, predator.x, predator.y)
 			
 			"""
 			wx = self.world.x
@@ -311,7 +311,7 @@ class Animal(Living):
 		# if the predatorect is farther than the animal can see
 		for predator_key in self.memory.keys():
 			predator_loc = self.memory[predator_key]
-			if predator_loc is not None and tools.distance_formula(self.x, self.y, predator_loc[0], predator_loc[0]) <= self.vision_dist:
+			if predator_loc is not None and tools.distance(self.x, self.y, predator_loc[0], predator_loc[0]) <= self.vision_dist:
 				self.memory[predator_key] = None
 
 	def update_body(self):

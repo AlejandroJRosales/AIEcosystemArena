@@ -128,7 +128,7 @@ class EcosystemScene:
 		selected_obj = None
 		closest_obj_dist = math.inf
 		for obj in self.world:
-			obj_dist = tools.distance_formula(touch_coords[0], touch_coords[1], obj.x, obj.y)
+			obj_dist = tools.distance(touch_coords[0], touch_coords[1], obj.x, obj.y)
 			if isinstance(obj, species.Living) and obj_dist < closest_obj_dist:
 				selected_obj = obj
 				closest_obj_dist = obj_dist

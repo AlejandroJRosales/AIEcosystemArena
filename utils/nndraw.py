@@ -99,9 +99,10 @@ class MyScene:
 
     @staticmethod
     def get_weight_color(weight, max_abs_weight=1.0):
-        """Maps a weight to a color: strong negative=red, strong positive=blue, zero=white."""
+        """Maps a weight to a color: strong negative=red, strong positive=blue, zero=white.
+        Grayish weights are returned with partial transparency (alpha < 255)."""
         if max_abs_weight == 0:
-            max_abs_weight = 1.0 
+            max_abs_weight = 1.0
 
         normalized = weight / max_abs_weight
         normalized = max(-1.0, min(1.0, normalized))  # clamp between -1 and 1
@@ -117,6 +118,9 @@ class MyScene:
             g = int(255 * (1 - normalized))
             b = 255
 
-        return (r, g, b)
+        # Detect grayish color
+        is_grayish = abs(r - g) < 20 and abs(g - b) < 20 and abs(r - b) < 20
+        alpha = 80 if is_grayish else 255  # See-through if grayish
 
+        return (r, g, b, alpha)
 

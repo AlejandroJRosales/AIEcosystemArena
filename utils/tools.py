@@ -1,14 +1,14 @@
-from math import exp, sqrt
+from math import exp
 
 
-def distance_formula(x1, y1, x2, y2, mw=None, mh=None):
+def distance(x1, y1, x2, y2, mw=None, mh=None):
 	if mw is not None and mh is not None:
 		x1 = x1 % mw
 		y1 = y1 % mh
 		x2 = x2 % mw
 		y2 = y2 % mh
-		return sqrt(((x2 - x1) % mw)**2 + ((y2 - y1) % mh)**2)
-	return sqrt(((x2 - x1)**2) + ((y2 - y1)**2))
+		return ((x2 - x1) % mw)**2 + ((y2 - y1) % mh)**2
+	return ((x2 - x1)**2) + ((y2 - y1)**2)
 
 
 def clamp(value, minimum, maximum):
@@ -31,7 +31,7 @@ def get_pop_sizes(world, species_types):
 
 
 def in_range(x, y, x2, y2, allowed):
-	distance = distance_formula(x, y, x2, y2)
-	if distance <= allowed:
+	x = distance(x, y, x2, y2)
+	if x <= allowed ** 2:
 		return True
 	return False
