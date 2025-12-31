@@ -36,6 +36,7 @@ class EcosystemScene:
 		# Window-based scaling factor
 		base_width = 1000
 		base_height = 800
+		self.clock_speed = 30
 		scale = min(world_width / base_width, world_height / base_height)
 
 		# Settings based on size
@@ -64,8 +65,8 @@ class EcosystemScene:
 			num_wolfs = max(2, int(5 * scale))
 		
 		elif size == "Custom":
-			self.proportion = 0.9
-			self.bodies_of_water = 2
+			self.proportion = 0.6
+			self.bodies_of_water = 1
 			self.water_body_size = "Medium"
 			num_plants = int(50 * scale)
 			num_deer = int(40 * scale)
@@ -179,7 +180,10 @@ parser = argparse.ArgumentParser(description="Run the ecosystem simulation.")
 parser.add_argument('--size', type=str, choices=['Small', 'Medium', 'Large'], default='Medium',
 					help='Simulation size: Small, Medium, Large, or Custom (default: Medium)')
 args = parser.parse_args()
-sim_size = args.size.capitalize()
+
+# sim_size = args.size.capitalize()
+# Or
+sim_size = 'Medium'
 
 pygame.init()
 pygame.font.init()
@@ -202,8 +206,8 @@ screen = pygame.display.set_mode((ecosystem.w, ecosystem.h))
 nnd = nndraw.MyScene(screen, (ecosystem.w, ecosystem.h))
 pygame.display.set_caption('Ecosystem Simulation')
 clock = pygame.time.Clock()
-internal_speed = 50
 display_world = True
+paused = False
 selected_obj = None
 print("Now displaying world\n")
 while True:
@@ -228,39 +232,46 @@ while True:
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_q:
 				pygame.quit()
+			if event.key == pygame.K_p:
+				paused = not paused
+				print(f"Simulation {'paused' if paused else 'resumed'}")
 		if event.type == pygame.MOUSEBUTTONUP:
-			# # get object closest to where user clicked
+			if selected_obj is not None:
+				selected_obj.is_player = False
+
+			# get object closest to where user clicked
 			selected_obj = ecosystem.select_obj(pygame.mouse.get_pos())
-			
-			# # display stats of object
-			# display.analysis_mode(selected_obj)
-			
-			# selected_obj = ecosystem.select_obj(pygame.mouse.get_pos())
-			# selected_obj.is_player = True
+			selected_obj.is_player = True
+			display.analysis_mode(selected_obj)
 
 	# checking pressed held
 	keys = pygame.key.get_pressed()
-	if selected_obj is not None:
+	if selected_obj is not None and isinstance(selected_obj, species.Animal) and display_world:
+
+		if keys[pygame.K_w]:
+			selected_obj.move(coord_idx=3)
+		if keys[pygame.K_s]:
+			selected_obj.move(coord_idx=2)
+		if keys[pygame.K_a]:
+			selected_obj.move(coord_idx=1)
+		if keys[pygame.K_d]:
+			selected_obj.move(coord_idx=0)
+
+		nnd.draw(screen, selected_obj.brain, selected_obj.output_idx)
 		ecosystem.draw_transparent_circle(screen, selected_obj)
+			
+		if keys[pygame.K_ESCAPE]:
+			selected_obj.is_player = None
+			selected_obj = None
+		
 		if not selected_obj.alive:
 			# if living died
 			selected_obj = None
-		# if keys[pygame.K_w]:
-		# 	selected_obj.move(coord_change=(0, -1))
-		# if keys[pygame.K_s]:
-		# 	selected_obj.move(coord_change=(0, 1))
-		# if keys[pygame.K_a]:
-		# 	selected_obj.move(coord_change=(-1, 0))
-		# if keys[pygame.K_d]:
-		# 	selected_obj.move(coord_change=(1, 0))
-
-		# if keys[pygame.K_ESCAPE]:
-		# 	selected_obj.is_player = None
-		# 	selected_obj = None
 
 	if keys[pygame.K_t]:
 		ecosystem.unethical_runtime_optimization()
 		print("Pruning population")
+
 	if keys[pygame.K_n]:
 		# quit current window
 		pygame.display.quit()
@@ -279,24 +290,20 @@ while True:
 		screen = pygame.display.set_mode((world_width, world_height))
 		pygame.display.set_caption('EcosystemScene')
 	if keys[pygame.K_f]:
-		internal_speed += 5
-		print(f"Internal speed: {internal_speed}")
+		ecosystem.clock_speed += 5
+		print(f"Internal speed: {ecosystem.clock_speed}")
 
 	# if keys[pygame.K_d]:
 	# 	display_world = not display_world
 	# 	print(f"Display paused...") if not display_world else print("Display running...")
+
 	# if keys[pygame.K_s]:
-	# 	internal_speed -= 5
-	# 	print(f"Internal speed: {internal_speed}")
-	# if keys[pygame.K_d]:
-	# 	display_world = not display_world
-	# 	print(f"Display paused...") if not display_world else print("Display running...")
+	# 	ecosystem.clock_speed -= 5
+	# 	print(f"Internal speed: {ecosystem.clock_speed}")
 
-	ecosystem.update()
-
-	if display_world and selected_obj is not None and isinstance(selected_obj, species.Animal):
-		nnd.draw(screen, selected_obj.brain, selected_obj.output_idx)
+	if not paused:
+		ecosystem.update()
 
 	pygame.display.update()
 
-	clock.tick(internal_speed)
+	clock.tick(ecosystem.clock_speed)

@@ -156,8 +156,8 @@ class Animal(Living):
 
 		# brain
 		self.coord_changes = [(self.speed, 0), (-self.speed, 0), (0, self.speed), (0, -self.speed), (self.speed, self.speed), (self.speed, -self.speed), (-self.speed, self.speed), (-self.speed, -self.speed)]
-		self.num_inputs = 6 # TODO: map dynamic inpput dim
-		self.weights_layers = [self.num_inputs, 5, 4, 5, len(self.coord_changes)]
+		self.num_inputs = 6 # TODO: map dynamic input dim
+		self.weights_layers = [self.num_inputs, self.num_inputs, 9, len(self.coord_changes), len(self.coord_changes)]
 		self.brain = random.choice([ann.DenseNetwork, ann.LSTMNetwork])(self)
 		self.output = None
 

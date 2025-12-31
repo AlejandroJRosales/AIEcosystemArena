@@ -7,20 +7,21 @@ class MyScene:
         self.w_width = screen_size[0]
         self.w_height = screen_size[1]
         self.node_size = 15
+        self.scale = 0.75
 
     def draw(self, screen, nn, marked_node_idx):
-        font = pygame.font.SysFont('arial', 36)
+        font = pygame.font.SysFont('arial', int(36 * self.scale))
         if hasattr(nn, 'weights'):
-            net_type = "DenseNetwork"
+            network_label = "DenseNetwork"
         elif hasattr(nn, 'lstm_layers'):
-            net_type = "LSTMNetwork"
+            network_label = "LSTMNetwork"
         else:
-            net_type = "UnknownNetwork"
-        text_surface = font.render(net_type, True, (255, 255, 255))  # White color
+            network_label = "UnknownNetwork"
+        text_surface = font.render(network_label, True, (255, 255, 255))  # White color
         text_rect = text_surface.get_rect(center=(self.w_width // 2, 30))  # Centered near top
         screen.blit(text_surface, text_rect)
 
-        # --- Draw nodes and edges ---
+        # Draw nodes and edges
         all_nodes_pos = self.draw_nodes(screen, nn, marked_node_idx)
         weights = self.extract_weights(nn)
         min_weight, max_weight = self.get_weight_range(weights)
@@ -59,7 +60,7 @@ class MyScene:
                 node_color = (255, 255, 255)
                 if l_idx == (nn_len - 1) and n_idx == marked_node_idx:
                     node_color = (255, 0, 0)
-                pygame.draw.circle(screen, node_color, (x, y), self.node_size, width=3)
+                pygame.draw.circle(screen, node_color, (x, y), int(self.node_size * self.scale), width=3)
                 l_nodes_pos.append((x, y))
             all_nodes_pos.append(l_nodes_pos)
         return all_nodes_pos
@@ -120,7 +121,7 @@ class MyScene:
 
         # Detect grayish color
         is_grayish = abs(r - g) < 20 and abs(g - b) < 20 and abs(r - b) < 20
-        alpha = 80 if is_grayish else 255  # See-through if grayish
+        alpha = 200 if is_grayish else 255  # See-through if grayish
 
         return (r, g, b, alpha)
 
