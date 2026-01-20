@@ -25,7 +25,7 @@ add a "pause" button to stop the simulation and allow the user to interact with 
 
 
 class EcosystemScene:
-	def __init__(self, world_width, world_height, size="Small"):
+	def __init__(self, world_width, world_height, clock_speed=30, size="Small"):
 		print(f"\tSetting world parameters for \"{size}\" sized simulation...")
 		super(EcosystemScene, self).__init__()
 		
@@ -36,7 +36,7 @@ class EcosystemScene:
 		# Window-based scaling factor
 		base_width = 1000
 		base_height = 800
-		self.clock_speed = 30
+		self.clock_speed = clock_speed
 		scale = min(world_width / base_width, world_height / base_height)
 
 		# Settings based on size
@@ -181,9 +181,8 @@ parser.add_argument('--size', type=str, choices=['Small', 'Medium', 'Large'], de
 					help='Simulation size: Small, Medium, Large, or Custom (default: Medium)')
 args = parser.parse_args()
 
-# sim_size = args.size.capitalize()
-# Or
-sim_size = 'Medium'
+sim_size = args.size.capitalize() or 'Medium'
+clock_speed = 30
 
 pygame.init()
 pygame.font.init()
@@ -199,7 +198,7 @@ world_height = 600
 
 print("Starting creation of new world object...")
 # simulation setup
-ecosystem = EcosystemScene(world_width, world_height, size=sim_size)
+ecosystem = EcosystemScene(world_width, world_height, clock_speed=clock_speed, size=sim_size)
 
 # display setup
 screen = pygame.display.set_mode((ecosystem.w, ecosystem.h))
@@ -242,7 +241,9 @@ while True:
 			# get object closest to where user clicked
 			selected_obj = ecosystem.select_obj(pygame.mouse.get_pos())
 			selected_obj.is_player = True
-			display.analysis_mode(selected_obj)
+
+			# show object attributes
+			# display.analysis_mode(selected_obj)
 
 	# checking pressed held
 	keys = pygame.key.get_pressed()
@@ -264,7 +265,7 @@ while True:
 			selected_obj.is_player = None
 			selected_obj = None
 		
-		if not selected_obj.alive:
+		if selected_obj is not None and not selected_obj.alive:
 			# if living died
 			selected_obj = None
 
