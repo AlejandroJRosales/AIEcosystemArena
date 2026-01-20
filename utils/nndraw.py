@@ -1,5 +1,6 @@
 import pygame
 import numpy as np
+from utils.neural_network import DenseNetwork, LSTMNetwork
 
 class MyScene:
     def __init__(self, window, screen_size):
@@ -11,9 +12,9 @@ class MyScene:
 
     def draw(self, screen, nn, marked_node_idx):
         font = pygame.font.SysFont('arial', int(36 * self.scale))
-        if hasattr(nn, 'weights'):
+        if isinstance(nn, DenseNetwork):
             network_label = "DenseNetwork"
-        elif hasattr(nn, 'lstm_layers'):
+        elif isinstance(nn, LSTMNetwork):
             network_label = "LSTMNetwork"
         else:
             network_label = "UnknownNetwork"
@@ -29,13 +30,16 @@ class MyScene:
         for l_idx in range(len(all_nodes_pos) - 1):
             for n1_idx in range(len(all_nodes_pos[l_idx])):
                 for n2_idx in range(len(all_nodes_pos[l_idx + 1])):
+                    weight = weights[l_idx][n1_idx][n2_idx]
+                    if weight < min_weight + (max_weight - min_weight) * 0.1:
+                        continue
                     current_node_pos = all_nodes_pos[l_idx][n1_idx]
                     next_node_pos = all_nodes_pos[l_idx + 1][n2_idx]
-                    weight = weights[l_idx][n1_idx][n2_idx]
                     
                     scaled_weight = (weight - min_weight) / (max_weight - min_weight) if max_weight != min_weight else 0.5
                     line_color = self.get_weight_color(weight, scaled_weight)
-                    width = max(1, int(abs(weight) // 1))
+                    # width = max(1, int(weight) // 1)
+                    width = 1
                     pygame.draw.line(screen,
                                     line_color,
                                     (current_node_pos[0] + self.node_size, current_node_pos[1]),
@@ -67,11 +71,11 @@ class MyScene:
 
     def extract_weights(self, nn):
         """Return a dynamic format of weights: [layer][node][next_node]"""
-        if hasattr(nn, 'weights'):  # DenseNetwork
+        if isinstance(nn, DenseNetwork):  # DenseNetwork
             return nn.weights
-        elif hasattr(nn, 'lstm_layers'):
+        elif isinstance(nn, LSTMNetwork):
             combined = []
-            for lstm_layer in nn.lstm_layers:
+            for lstm_layer in nn.weights:
                 # Get the average of all gate weights for visualization
                 avg_weight = np.mean([
                     lstm_layer['W_i'],
