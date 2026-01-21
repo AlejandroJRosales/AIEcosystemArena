@@ -1,4 +1,6 @@
 from math import exp
+import yaml
+import os
 
 
 def distance(x1, y1, x2, y2, mw=None, mh=None):
@@ -35,3 +37,31 @@ def in_range(x, y, x2, y2, allowed):
 	if x <= allowed ** 2:
 		return True
 	return False
+
+def resource_path(relative_path):
+		""" Get absolute path to resource, works for dev and for PyInstaller """
+		try:
+			import sys
+			# PyInstaller creates a temp folder and stores path in _MEIPASS
+			base_path = sys._MEIPASS
+		except Exception:
+			base_path = os.path.abspath(".")
+		return os.path.join(base_path, relative_path)
+
+
+def extract_config_data(data_type):
+	# user and default config paths
+	user_config = os.path.join("mnt", "config", f"{data_type}_config.yaml")
+	default_config = os.path.join("assets", "config", f"default_{data_type}_config.yaml")
+	
+	# Check if user config exists, use default if not
+	primary_asset_path = resource_path(user_config)
+	if os.path.exists(primary_asset_path):
+		asset_path = primary_asset_path
+	else:
+		asset_path = resource_path(default_config)
+	
+	with open(asset_path, "r") as file:
+		data = yaml.safe_load(file)
+
+	return data

@@ -4,32 +4,16 @@ import math
 import time
 import numpy as np
 import pygame
-import yaml
 from pathlib import Path
 from utils import tools
 from utils import neural_network as ann
 from utils.environment import Water
 from utils.social import Predator
 
-def resource_path(relative_path):
-	""" Get absolute path to resource, works for dev and for PyInstaller """
-	try:
-		import sys
-		# PyInstaller creates a temp folder and stores path in _MEIPASS
-		base_path = sys._MEIPASS
-	except Exception:
-		base_path = os.path.abspath(".")
-	return os.path.join(base_path, relative_path)
-
 
 class SpeciesInfo:
-	def __init__(self, config_path=None):
-		config_path = os.path.join("assets", "config", "species_config.yaml")
-		asset_path = resource_path(config_path)
-		with open(asset_path, "r") as file:
-			raw_data = yaml.safe_load(file)
-
-		self.data = self._process_config(raw_data)
+	def __init__(self):
+		self.data = self._process_config(tools.extract_config_data("species"))
 
 	def _process_config(self, raw_data):
 		name_to_class = {
@@ -60,7 +44,7 @@ class Living(pygame.sprite.Sprite):
 		self.world = world
 		self.birth_coord = coord
 		self.tob = time.time()
-		image_path = resource_path(os.path.join("assets", "images"))
+		image_path = tools.resource_path(os.path.join("assets", "images"))
 		self.assets_img_path = Path(image_path)
 
 	def generate_entity(self, species_type, sexes_info):
@@ -74,7 +58,6 @@ class Living(pygame.sprite.Sprite):
 		self.img = pygame.image.load(img_file_name)
 		self.img = pygame.transform.scale(self.img, (self.width, self.height))
 		self.rect = self.img.get_rect(center=(self.x, self.y))
-
 
 	def get_coords(self):
 		return self.x, self.y

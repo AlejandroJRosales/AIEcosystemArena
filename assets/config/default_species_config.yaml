@@ -8,7 +8,7 @@ deer:
   predators: [Wolf]
   diet: [Plant]
   speed: random.uniform(3, 5)
-  consumption_rate: random.randint(2, 5)
+  consumption_rate: random.randint(3, 5)
 
 wolf:
   sexes:
@@ -19,8 +19,8 @@ wolf:
   mate: Wolf
   predators: [None]
   diet: [Deer]
-  speed: random.uniform(3, 5)
-  consumption_rate: random.randint(30, 60)
+  speed: random.uniform(4, 6)
+  consumption_rate: random.randint(40, 60)
 
 plant:
   sexes:

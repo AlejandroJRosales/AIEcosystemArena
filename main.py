@@ -240,7 +240,7 @@ while True:
 
 			# get object closest to where user clicked
 			selected_obj = ecosystem.select_obj(pygame.mouse.get_pos())
-			selected_obj.is_player = True
+			# selected_obj.is_player = True
 
 			# show object attributes
 			# display.analysis_mode(selected_obj)
@@ -249,21 +249,21 @@ while True:
 	keys = pygame.key.get_pressed()
 	if selected_obj is not None and isinstance(selected_obj, species.Animal) and display_world:
 
-		if keys[pygame.K_w]:
-			selected_obj.move(coord_idx=3)
-		if keys[pygame.K_s]:
-			selected_obj.move(coord_idx=2)
-		if keys[pygame.K_a]:
-			selected_obj.move(coord_idx=1)
-		if keys[pygame.K_d]:
-			selected_obj.move(coord_idx=0)
+		if selected_obj.is_player:
+			if keys[pygame.K_w]:
+				selected_obj.move(coord_idx=3)
+			if keys[pygame.K_s]:
+				selected_obj.move(coord_idx=2)
+			if keys[pygame.K_a]:
+				selected_obj.move(coord_idx=1)
+			if keys[pygame.K_d]:
+				selected_obj.move(coord_idx=0)
+			if keys[pygame.K_ESCAPE]:
+				selected_obj.is_player = None
+				selected_obj = None
 
 		nnd.draw(screen, selected_obj.brain, selected_obj.output_idx)
 		ecosystem.draw_transparent_circle(screen, selected_obj)
-			
-		if keys[pygame.K_ESCAPE]:
-			selected_obj.is_player = None
-			selected_obj = None
 		
 		if selected_obj is not None and not selected_obj.alive:
 			# if living died
