@@ -51,7 +51,7 @@ def resource_path(relative_path):
 
 def extract_config_data(data_type):
 	# user and default config paths
-	user_config = os.path.join("mnt", "config", f"{data_type}_config.yaml")
+	user_config = os.path.join("mnt", f"{data_type}_config.yaml")
 	default_config = os.path.join("assets", "config", f"default_{data_type}_config.yaml")
 	
 	# Check if user config exists, use default if not

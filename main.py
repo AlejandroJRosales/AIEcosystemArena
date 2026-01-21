@@ -1,4 +1,3 @@
-import ctypes
 import argparse
 import time
 import math
@@ -25,13 +24,12 @@ add a "pause" button to stop the simulation and allow the user to interact with 
 
 
 class EcosystemScene:
-	def __init__(self, world_width, world_height, clock_speed=30, size="Small"):
-		print(f"\tSetting world parameters for \"{size}\" sized simulation...")
+	def __init__(self, world_width, world_height):
 		super(EcosystemScene, self).__init__()
 		
 		self.w = world_width
 		self.h = world_height
-		self.size = size  # "Large", "Medium", "Small", or "Custom"
+		# self.size = size  # "Large", "Medium", "Small", or "Custom"
 
 		# Window-based scaling factor
 		base_width = 1000
@@ -40,40 +38,19 @@ class EcosystemScene:
 		scale = min(world_width / base_width, world_height / base_height)
 
 		# Settings based on size
-		if size == "Large":
-			self.proportion = 0.6
-			self.bodies_of_water = 2
-			self.water_body_size = "Large"
-			num_plants = int(160 * scale)
-			num_deer = int(120 * scale)
-			num_wolfs = max(4, int(12 * scale))
+		config = tools.extract_config_data("world")
+		size = config["size"]
+		print(f"\tSetting world parameters for \"{size}\" sized simulation...")
 
-		elif size == "Medium":
-			self.proportion = 1
-			self.bodies_of_water = 2
-			self.water_body_size = "Medium"
-			num_plants = int(80 * scale)
-			num_deer = int(60 * scale)
-			num_wolfs = max(2, int(10 * scale))
+		size_config = config["sizes"][size]
+		self.clock_speed = config["clock_speed"]
+		self.proportion = size_config["proportion"]
+		self.bodies_of_water = size_config["bodies_of_water"]
+		self.water_body_size = size_config["water_body_size"]
 
-		elif size == "Small":
-			self.proportion = 1.75
-			self.bodies_of_water = 2
-			self.water_body_size = "Small"
-			num_plants = int(40 * scale)
-			num_deer = int(30 * scale)
-			num_wolfs = max(2, int(5 * scale))
-		
-		elif size == "Custom":
-			self.proportion = 0.6
-			self.bodies_of_water = 1
-			self.water_body_size = "Medium"
-			num_plants = int(50 * scale)
-			num_deer = int(40 * scale)
-			num_wolfs = max(1, int(8 * scale))
-
-		else:
-			raise ValueError("Invalid size. Choose from 'Large', 'Medium', 'Small', or 'Custom'.")
+		num_plants = int(size_config["num_plants"] * scale)
+		num_deer = int(size_config["num_deer"] * scale)
+		num_wolfs = max(2, int(size_config["num_wolfs"] * scale))  # or appropriate min value
 
 		self.species_types = {
 			species.Plant: num_plants,
@@ -198,7 +175,7 @@ world_height = 600
 
 print("Starting creation of new world object...")
 # simulation setup
-ecosystem = EcosystemScene(world_width, world_height, clock_speed=clock_speed, size=sim_size)
+ecosystem = EcosystemScene(world_width, world_height)
 
 # display setup
 screen = pygame.display.set_mode((ecosystem.w, ecosystem.h))
