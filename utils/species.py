@@ -128,7 +128,7 @@ class Animal(Living):
 		self.child_grace_period = random.randint(15, 30)
 		self.look_for_mate = False
 		self.vision_dist = random.randint(15, 100) * self.world.proportion
-		self.mutation_multi = 0.2
+		self.mutation_multi = 0.5
 		self.prob_mutation = 0.1
 		self.alive = True
 		self.is_focused = False
@@ -360,9 +360,11 @@ class Animal(Living):
 			(self.vision_dist + parent2.vision_dist) / 2) * random.uniform(
 				lower_bound, upper_bound
 			)
-		# child.mutation_multi = ((self.mutation_multi + parent2.mutation_multi) / 2) * random.uniform(0.9, 1.1)
+		child.mutation_multi = ((self.mutation_multi + parent2.mutation_multi) / 2) * random.uniform(0.9, 1.1)
 		# build brain based off of parents brains, then reinitialaize nn
 		child.brain = random.choice([type(self.brain), type(parent2.brain)])(child)
+		# child.brain.learning_rate = ((self.brain.learning_rate + parent2.brain.learning_rate) / 2) * random.uniform(0.5, 1.5)
+		child.brain.crossover(self.brain, parent2.brain, mutation_multi=self.mutation_multi)
 
 		self.last_child_tob = time.time()
 		self.update_internal_clocks()

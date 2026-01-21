@@ -30,7 +30,7 @@ def print_weights_tree(weights, indent="│   ", max_neurons=3, precision=4):
 			print(f"{layer_indent}│   ├── Neuron {j}: [{formatted}]")
 
 
-def analysis_mode(obj, indent=""):
+def analysis_mode(obj, indent="", filter=None):
 	print(f"{indent}{type(obj).__name__} (id={id(obj)})")
 	sub_indent = indent + "│   "
 
@@ -45,5 +45,6 @@ def analysis_mode(obj, indent=""):
 				else:
 					print(f"{dense_indent}├── {sub_attr}: {sub_value}")
 		else:
+			continue
 			print(f"{sub_indent}├── {attr}: {value}")
 

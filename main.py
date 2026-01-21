@@ -220,7 +220,7 @@ while True:
 			# selected_obj.is_player = True
 
 			# show object attributes
-			# display.analysis_mode(selected_obj)
+			display.analysis_mode(selected_obj)
 
 	# checking pressed held
 	keys = pygame.key.get_pressed()
