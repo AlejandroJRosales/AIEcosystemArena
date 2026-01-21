@@ -9,6 +9,7 @@ deer:
   diet: [Plant]
   speed: random.uniform(3, 5)
   consumption_rate: random.randint(3, 5)
+  start_health: random.randint(75, 150)
 
 wolf:
   sexes:
@@ -21,6 +22,7 @@ wolf:
   diet: [Deer]
   speed: random.uniform(4, 6)
   consumption_rate: random.randint(40, 60)
+  start_health: random.randint(75, 150)
 
 plant:
   sexes:

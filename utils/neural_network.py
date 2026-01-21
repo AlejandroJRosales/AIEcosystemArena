@@ -8,7 +8,7 @@ from utils import tools
 class Network(ABC):
     """Abstract base class for neural networks"""
     
-    def __init__(self, layer_dims, learning_rate=10, momentum=0.9, weight_decay=0.0001):
+    def __init__(self, layer_dims, learning_rate=0.01, momentum=0.9, weight_decay=0.0001):
         self.layer_dims = layer_dims
         self.learning_rate = learning_rate
         self.momentum = momentum
@@ -95,7 +95,7 @@ class Network(ABC):
 class DenseNetwork(Network):
     """Feedforward neural network with dense layers"""
     
-    def __init__(self, animal, learning_rate=10, momentum=0.9, weight_decay=0.0001):
+    def __init__(self, animal, learning_rate=0.01, momentum=0.9, weight_decay=0.0001):
         layer_dims = animal.nn_layer_dims
         super().__init__(layer_dims, learning_rate, momentum, weight_decay)
         
@@ -194,7 +194,7 @@ class DenseNetwork(Network):
 class LSTMNetwork(Network):
     """LSTM neural network"""
     
-    def __init__(self, animal, learning_rate=10, momentum=0.9, weight_decay=0.0001):
+    def __init__(self, animal, learning_rate=0.01, momentum=0.9, weight_decay=0.0001):
         layer_dims = animal.nn_layer_dims
         super().__init__(layer_dims, learning_rate, momentum, weight_decay)
         

@@ -98,6 +98,7 @@ class Animal(Living):
 		self.mate_pref = self.species_info["mate"]
 		self.speed = self.species_info["speed"]
 		self.consumption_rate = self.species_info["consumption_rate"]
+		self.start_health = self.species_info["start_health"]
 		self.generate_entity(self.species_type, self.sexes_info)
 		self.memory = {
 			"predator": None,
@@ -112,7 +113,6 @@ class Animal(Living):
 			"mate": None
 		}
 		self.priority = None
-		self.start_health = random.randint(75, 150)
 		self.health = self.start_health
 		self.age_depl = self.start_health * 0.00002
 		self.water_depl = self.start_health * 0.001
