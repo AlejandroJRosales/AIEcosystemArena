@@ -239,7 +239,7 @@ while True:
 				selected_obj.is_player = None
 				selected_obj = None
 
-		nnd.draw(screen, selected_obj.brain, selected_obj.output_idx)
+		nnd.draw(screen, selected_obj.brain, selected_obj.output_idx, selected_obj.generation)
 		ecosystem.draw_transparent_circle(screen, selected_obj)
 		
 		if selected_obj is not None and not selected_obj.alive:

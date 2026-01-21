@@ -46,6 +46,7 @@ class Living(pygame.sprite.Sprite):
 		self.tob = time.time()
 		image_path = tools.resource_path(os.path.join("assets", "images"))
 		self.assets_img_path = Path(image_path)
+		self.generation = 0
 
 	def generate_entity(self, species_type, sexes_info):
 		self.x = self.birth_coord[0]
@@ -369,6 +370,7 @@ class Animal(Living):
 		self.last_child_tob = time.time()
 		self.update_internal_clocks()
 		self.reproduction_need = 0
+		self.generation = max(self.generation, parent2.generation) + 1
 
 		parent2.last_child_tob = time.time()
 		parent2.update_internal_clocks()

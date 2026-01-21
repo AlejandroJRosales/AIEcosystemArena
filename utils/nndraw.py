@@ -1,3 +1,4 @@
+from tkinter import font
 import pygame
 import numpy as np
 from utils.neural_network import DenseNetwork, LSTMNetwork
@@ -9,16 +10,17 @@ class MyScene:
         self.w_height = screen_size[1]
         self.node_size = 15
         self.scale = 0.75
+        self.font = pygame.font.SysFont('arial', int(30 * self.scale))
 
-    def draw(self, screen, nn, marked_node_idx):
-        font = pygame.font.SysFont('arial', int(36 * self.scale))
+    def draw(self, screen, nn, marked_node_idx, generation):
         if isinstance(nn, DenseNetwork):
             network_label = "DenseNetwork"
         elif isinstance(nn, LSTMNetwork):
             network_label = "LSTMNetwork"
         else:
             network_label = "UnknownNetwork"
-        text_surface = font.render(network_label, True, (255, 255, 255))  # White color
+        label = f"{network_label} : Generation {generation}"
+        text_surface = self.font.render(label, True, (255, 255, 255))  # White color
         text_rect = text_surface.get_rect(center=(self.w_width // 2, 30))  # Centered near top
         screen.blit(text_surface, text_rect)
 
