@@ -225,7 +225,11 @@ while True:
 	# checking pressed held
 	keys = pygame.key.get_pressed()
 	if selected_obj is not None and isinstance(selected_obj, species.Animal) and display_world:
+		nnd.draw(screen, selected_obj.brain, selected_obj.output_idx, selected_obj.generation)
+		ecosystem.draw_transparent_circle(screen, selected_obj)
 
+		if keys[pygame.K_e]:
+			selected_obj.is_player = True
 		if selected_obj.is_player:
 			if keys[pygame.K_w]:
 				selected_obj.move(coord_idx=3)
@@ -235,16 +239,10 @@ while True:
 				selected_obj.move(coord_idx=1)
 			if keys[pygame.K_d]:
 				selected_obj.move(coord_idx=0)
-			if keys[pygame.K_ESCAPE]:
+				
+		if keys[pygame.K_ESCAPE] or not selected_obj.alive:
 				selected_obj.is_player = None
 				selected_obj = None
-
-		nnd.draw(screen, selected_obj.brain, selected_obj.output_idx, selected_obj.generation)
-		ecosystem.draw_transparent_circle(screen, selected_obj)
-		
-		if selected_obj is not None and not selected_obj.alive:
-			# if living died
-			selected_obj = None
 
 	if keys[pygame.K_t]:
 		ecosystem.unethical_runtime_optimization()
