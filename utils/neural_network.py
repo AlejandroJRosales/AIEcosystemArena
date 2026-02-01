@@ -147,6 +147,8 @@ class DenseNetwork(Network):
     
     def crossover(self, parent1, parent2, mutation_multi=0.5):
         """Blend weights from two parents"""
+        # learned experiences dont get inherited
+        return
         mutation_factor = self._blend_parent_weights(parent1, parent2, mutation_multi)
         
         # Blend weights

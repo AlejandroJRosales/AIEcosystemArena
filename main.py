@@ -7,11 +7,13 @@ from utils import environment
 from utils import tools
 from utils import display
 from utils import nndraw
+from utils import player
 
 
 """
 TODO:
 "I'm gonna try to build this in my simulation. I can like place large boulders then the animals will hv to figure out how to pass them. Maybe I'll use ants instead so they can transfer information and create a better path. Almost like a path finding algorithm but with ants"
+pennalize neural networks per node, edge, weight magnitude, etc.
 obstacles, and being able to add obstacles with touch
 save button, on screen attribute adjustments for "new simulation" feature
 SPEED attribute doesnt hv to be intilized for class even though it is being called by a function that runs
@@ -41,6 +43,8 @@ class EcosystemScene:
 		config = tools.extract_config_data("world")
 		size = config["size"]
 		print(f"\tSetting world parameters for \"{size}\" sized simulation...")
+
+		self.player = player.Controller()
 
 		size_config = config["sizes"][size]
 		self.clock_speed = config["clock_speed"]
@@ -110,6 +114,8 @@ class EcosystemScene:
 			if isinstance(obj, species.Living) and obj_dist < closest_obj_dist:
 				selected_obj = obj
 				closest_obj_dist = obj_dist
+				if isinstance(selected_obj, species.Animal):
+					self.player.initialize(selected_obj)
 		return selected_obj
 
 	def draw_transparent_circle(self, screen, selected_obj):
@@ -119,7 +125,10 @@ class EcosystemScene:
 			radius = selected_obj.vision_dist
 
 			# Define the color with alpha (0.3 for transparency)
-			circle_color = (34, 139, 34, 0)
+			if selected_obj.is_player:
+				circle_color = (0, 0, 255, 50)  # Red with transparency
+			else:
+				circle_color = (34, 139, 34, 0)  # Green with transparency
 
 			# Create a new surface with the same size as the window and an alpha channel
 			circle_surface = pygame.Surface((self.w, self.h), pygame.SRCALPHA)  # Use SRCALPHA for transparency
@@ -224,25 +233,14 @@ while True:
 
 	# checking pressed held
 	keys = pygame.key.get_pressed()
-	if selected_obj is not None and isinstance(selected_obj, species.Animal) and display_world:
-		nnd.draw(screen, selected_obj.brain, selected_obj.output_idx, selected_obj.generation)
-		ecosystem.draw_transparent_circle(screen, selected_obj)
+	if selected_obj is not None and display_world:
+		# handle drawing neural network and vision circle
+		if selected_obj.alive and isinstance(selected_obj, species.Animal):
+			nnd.draw(screen, selected_obj.brain, selected_obj.output_idx, selected_obj.generation)
+			ecosystem.draw_transparent_circle(screen, selected_obj)
 
-		if keys[pygame.K_e]:
-			selected_obj.is_player = True
-		if selected_obj.is_player:
-			if keys[pygame.K_w]:
-				selected_obj.move(coord_idx=3)
-			if keys[pygame.K_s]:
-				selected_obj.move(coord_idx=2)
-			if keys[pygame.K_a]:
-				selected_obj.move(coord_idx=1)
-			if keys[pygame.K_d]:
-				selected_obj.move(coord_idx=0)
-				
-		if keys[pygame.K_ESCAPE] or not selected_obj.alive:
-				selected_obj.is_player = None
-				selected_obj = None
+		# handle player control
+		ecosystem.player.handle_player_movement(keys)
 
 	if keys[pygame.K_t]:
 		ecosystem.unethical_runtime_optimization()
@@ -259,7 +257,7 @@ while True:
 		print("[TERMINATION COMPLETE]")
 		time.sleep(2)
 		print("\n\n\nStarting creation of new world object...")
-		ecosystem = EcosystemScene(world_width, world_height, size=sim_size)
+		ecosystem = EcosystemScene(world_width, world_height)
 		print("Now displaying world")
 
 		# display new window
@@ -273,7 +271,7 @@ while True:
 	# 	display_world = not display_world
 	# 	print(f"Display paused...") if not display_world else print("Display running...")
 
-	# if keys[pygame.K_s]:
+	# if keys[pygame. 	]:
 	# 	ecosystem.clock_speed -= 5
 	# 	print(f"Internal speed: {ecosystem.clock_speed}")
 

@@ -365,7 +365,8 @@ class Animal(Living):
 		# build brain based off of parents brains, then reinitialaize nn
 		child.brain = random.choice([type(self.brain), type(parent2.brain)])(child)
 		# child.brain.learning_rate = ((self.brain.learning_rate + parent2.brain.learning_rate) / 2) * random.uniform(0.5, 1.5)
-		child.brain.crossover(self.brain, parent2.brain, mutation_multi=self.mutation_multi)
+		# learned experiences dont get inherited
+		# child.brain.crossover(self.brain, parent2.brain, mutation_multi=self.mutation_multi)
 
 		self.last_child_tob = time.time()
 		self.update_internal_clocks()

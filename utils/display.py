@@ -36,6 +36,7 @@ def analysis_mode(obj, indent="", filter=None):
 
 	for attr, value in obj.__dict__.items():
 		if isinstance(value, DenseNetwork):
+			continue
 			print(f"{sub_indent}├── {attr}: DenseNetwork")
 			dense_indent = sub_indent + "│   "
 			for sub_attr, sub_value in value.__dict__.items():
@@ -45,6 +46,5 @@ def analysis_mode(obj, indent="", filter=None):
 				else:
 					print(f"{dense_indent}├── {sub_attr}: {sub_value}")
 		else:
-			continue
 			print(f"{sub_indent}├── {attr}: {value}")
 
