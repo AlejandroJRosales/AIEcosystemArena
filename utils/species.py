@@ -121,7 +121,7 @@ class Animal(Living):
 		self.food_need = round(random.uniform(0.01, 0.03), 4)
 		self.reproduction_need = round(random.uniform(0.01, 0.03), 4)
 		self.avoid_need = 0
-		self.food_increment = self.health * 0.0125
+		self.food_increment = self.health * 0.0003
 		self.water_increment = self.health * 0.0001
 		self.reproduction_increment = self.health * 0.0005
 		# self.predator_reaction = 2
@@ -387,7 +387,7 @@ class Plant(Living):
 		self.species_info = SpeciesInfo().data["plant"]
 		self.sexes_info = self.species_info["sexes"]
 		self.generate_entity("plant", self.sexes_info)
-		self.health = 30
+		self.health = 5
 		self.start_health = self.health
 		self.size_multi = 0.6
 		self.alive = True

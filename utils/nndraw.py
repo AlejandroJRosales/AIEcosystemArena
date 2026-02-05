@@ -12,14 +12,15 @@ class MyScene:
         self.scale = 0.75
         self.font = pygame.font.SysFont('arial', int(30 * self.scale))
 
-    def draw(self, screen, nn, marked_node_idx, generation):
+    def draw(self, screen, obj):
+        nn, marked_node_idx, generation, health, hunger, thirst = obj.brain, obj.output_idx, obj.generation, obj.health, obj.food_need, obj.water_need
         if isinstance(nn, DenseNetwork):
             network_label = "DenseNetwork"
         elif isinstance(nn, LSTMNetwork):
             network_label = "LSTMNetwork"
         else:
             network_label = "UnknownNetwork"
-        label = f"{network_label} : Generation {generation}"
+        label = f"{network_label} : Generation {generation}\nHealth: {health:.1f}, Hunger Need: {hunger:.1f}, Thirst Need: {thirst:.1f}"
         text_surface = self.font.render(label, True, (255, 255, 255))  # White color
         text_rect = text_surface.get_rect(center=(self.w_width // 2, 30))  # Centered near top
         screen.blit(text_surface, text_rect)

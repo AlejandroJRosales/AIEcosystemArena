@@ -236,7 +236,7 @@ while True:
 	if selected_obj is not None and display_world:
 		# handle drawing neural network and vision circle
 		if selected_obj.alive and isinstance(selected_obj, species.Animal):
-			nnd.draw(screen, selected_obj.brain, selected_obj.output_idx, selected_obj.generation)
+			nnd.draw(screen, selected_obj)
 			ecosystem.draw_transparent_circle(screen, selected_obj)
 
 		# handle player control
