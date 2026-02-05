@@ -156,8 +156,8 @@ class Animal(Living):
 			return normalized_v * self.speed
 		return normalized_v * (self.speed * 0.3)
 
-	def move(self, coord_idx=None):
-		coord_change = self.coord_changes[coord_idx]
+	def move(self):
+		coord_change = self.coord_changes[self.output_idx]
 		self.x = (coord_change[0] + self.x) % self.world.world_width
 		self.y = (coord_change[1] + self.y) % self.world.world_height
 		self.rect.center = (self.x, self.y)
@@ -242,7 +242,6 @@ class Animal(Living):
 			# old implementation for choosing next move
 			priority_list = sorted(needs.items(), key=lambda item: item[1], reverse=True)
 			self.priority_dict = dict(priority_list)
-	
 
 			# starts with first priority
 			for need in self.priority_dict.keys():
@@ -259,15 +258,11 @@ class Animal(Living):
 					break
 
 			# feed predator_locations, priorities, and difference in health as cost function through nn
-			focused_predator_coords = self.predator_location
-			if focused_predator_coords is not None:
-				agents_choice = self.brain.think(self)
-			else:
-				# if no predator found then move randomly
-				agents_choice = random.randint(0, len(self.coord_changes) - 1)
+			self.predator_location if self.predator_location is not None else (0, 0)
+			agents_choice = self.brain.think(self)
+			
 			# go to location
 			self.output_idx = agents_choice
-			self.move(self.output_idx)
 
 	def update_resources_need(self):
 		# self.water_need = tools.clamp(self.water_need + self.water_increment, 0, 1)
@@ -299,14 +294,11 @@ class Animal(Living):
 				self.memory[predator_key] = None
 
 	def update_body(self):
-		self.is_exploring = not self.is_focused
-		self.is_focused = False
-		self.priority = None
+		self.move()
 		self.update_resources_need()
 		self.update_internal_clocks()
 		self.update_memory()
-		if tools.in_range(self.x, self.y, self.coords_focused.x, self.coords_focused.y, 7) or random.random() <= 0.001:
-			self.new_explore_coords()
+		self.brain.adjust_weights()
 		self.health -= (time.time() - self.tob) * self.age_depl
 		self.health -= self.water_need * 0.0001
 		self.health -= self.food_need * 0.0001
@@ -314,14 +306,10 @@ class Animal(Living):
 
 	def update(self, envir_class, predators):
 		neighbors = self.neighbors(predators)
-		self.update_body()
 		self.think(neighbors)
+		self.update_body()
 		self.detect_collision(envir_class, neighbors)
 		self.check()
-		
-	def new_explore_coords(self):
-		self.coords_focused.x = self.world.world_width * random.uniform(0, 1)
-		self.coords_focused.y = self.world.world_height * random.uniform(0, 1)
 
 	def detect_collision(self, envir_class, predators):
 		for predator in predators:

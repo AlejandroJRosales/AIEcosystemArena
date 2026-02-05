@@ -55,7 +55,6 @@ class Network(ABC):
         mapped_input = self.map_input(agent)
         values = list(self.propagate(mapped_input))
         self.output = max(range(len(values)), key=values.__getitem__)
-        self.adjust_weights()
         return self.output
     
     @abstractmethod

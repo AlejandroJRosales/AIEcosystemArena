@@ -32,9 +32,9 @@ def get_pop_sizes(world, species_types):
 	return pop_sizes
 
 
-def in_range(x, y, x2, y2, allowed):
-	x = distance(x, y, x2, y2)
-	if x <= allowed ** 2:
+def in_range(x, y, x2, y2, threshold):
+	d = distance(x, y, x2, y2)
+	if d <= threshold ** 2:
 		return True
 	return False
 
