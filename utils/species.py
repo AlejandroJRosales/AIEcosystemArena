@@ -145,7 +145,7 @@ class Animal(Living):
 		self.brain = random.choice([ann.DenseNetwork, ann.LSTMNetwork])(self)
 		self.output = None
 
-	def neighbors(self, predators):
+	def find(self, predators):
 		return [predator for predator in predators if tools.distance(self.x, self.y, predator.x, predator.y) <= self.vision_dist and id(self) != id(predator)]
 
 	def normalize_direction_focused(self):
@@ -174,8 +174,8 @@ class Animal(Living):
 		# make it so that if a predator is after self then make that take precedence
 		self.avoid_need = math.inf
 
-	def search(self, predators):
-		predator_distances = {
+	def locate(self):
+		obj_distances = {
 			"predator": math.inf,
 			"food": math.inf,
 			"water": math.inf,
@@ -183,8 +183,8 @@ class Animal(Living):
 		}
 		
 		# neighboring_predators = [predator for predator in predators if tools.distance(self.x, self.y, predator.x, predator.y) <= self.vision_dist * 0.3]
-		for predator in predators:
-			predator_dist = tools.distance(self.x, self.y, predator.x, predator.y)
+		for obj in self.neighbors:
+			obj_dist = tools.distance(self.x, self.y, obj.x, obj.y)
 			
 			"""
 			wx = self.world.x
@@ -200,37 +200,36 @@ class Animal(Living):
 				in_sight = predator_dist <= self.vision_dist
 			"""
 			
-			in_sight = predator_dist <= self.vision_dist
-				
+			in_sight = obj_dist <= self.vision_dist
 			if in_sight:
 				# first condition checks if self has predators to prevent runtime error
-				# second condition checks if predator is a predator of self
-				predator_is_predator = self.predators[0] is not None and isinstance(predator, self.predators)
-				if predator_is_predator and predator_dist <= predator_distances["predator"] and id(predator) != id(self):
-					predator_distances["predator"] = predator_dist
-					self.focus(predator, "predator")
+				# second condition checks if obj is a predator of self
+				predator_is_predator = self.predators[0] is not None and isinstance(obj, self.predators)
+				if predator_is_predator and obj_dist <= obj_distances["predator"] and id(obj) != id(self):
+					obj_distances["predator"] = obj_dist
+					self.focus(obj, "predator")
 					# calc avoidance here because it will be used later
 					self.calc_avoid_needed()
 					# todo: calculate avoidance needed for each animal
 				
-				# if the predator is food
-				elif isinstance(predator, self.diet) and predator_dist <= predator_distances["food"] and id(predator) != id(self):
-					predator_distances["food"] = predator_dist
-					self.focus(predator, "food")
+				# if the obj is food
+				elif isinstance(obj, self.diet) and obj_dist <= obj_distances["food"] and id(obj) != id(self):
+					obj_distances["food"] = obj_dist
+					self.focus(obj, "food")
 					
-				# if the predatorect is water
-				elif isinstance(predator, Water) and predator_dist <= predator_distances["water"] and id(predator) != id(self):
-					predator_distances["water"] = predator_dist
-					self.focus(predator, "water")
+				# if the obj is water
+				elif isinstance(obj, Water) and obj_dist <= obj_distances["water"] and id(obj) != id(self):
+					obj_distances["water"] = obj_dist
+					self.focus(obj, "water")
 				
-				# if the predator is a mate
-				elif isinstance(predator, self.mate_pref) and predator_dist <= predator_distances["mate"] and predator.sex != self.sex and id(predator) != id(self):
-					predator_distances["mate"] = predator_dist
-					self.focus(predator, "mate")
+				# if the obj is a mate
+				elif isinstance(obj, self.mate_pref) and obj_dist <= obj_distances["mate"] and obj.sex != self.sex and id(obj) != id(self):
+					obj_distances["mate"] = obj_dist
+					self.focus(obj, "mate")
 
-	def think(self, predators):
+	def think(self):
 		if not self.is_player:
-			self.search(predators)
+			self.locate()
 			needs = {
 				"predator": self.avoid_need,
 				"food": self.food_need,
@@ -295,27 +294,25 @@ class Animal(Living):
 			if predator_loc is not None and tools.distance(self.x, self.y, predator_loc[0], predator_loc[0]) <= self.vision_dist:
 				self.memory[predator_key] = None
 
-	def update_body(self, envir_class, neighbors, compute=False):
-		if compute:
-			neighbors = self.neighbors(neighbors)
+	def update_body(self, envir_class, world_objs):
+		self.neighbors = self.find(world_objs)
 		self.update_resources_need()
 		self.update_internal_clocks()
 		self.update_memory()
-		self.brain.adjust_weights()
 		self.health -= (time.time() - self.tob) * self.age_depl
 		self.health -= self.water_need * 0.0001
 		self.health -= self.food_need * 0.0001
 		self.avoid_need = 0
-		self.detect_collision(envir_class, neighbors)
+		self.detect_collision(envir_class)
 		self.check()
 
 	def update(self, envir_class, world_objs):
-		neighbors = self.neighbors(world_objs)
-		self.think(neighbors)
-		self.update_body(envir_class, neighbors)
+		self.update_body(envir_class, world_objs)
+		self.brain.adjust_weights()
+		self.think()
 
-	def detect_collision(self, envir_class, predators):
-		for predator in predators:
+	def detect_collision(self, envir_class):
+		for predator in self.neighbors:
 			if self.rect.colliderect(predator.rect):
 				# Avoid mating with self
 				if self.look_for_mate and self.sex == "female" and isinstance(predator, self.mate_pref) and self.sex != predator.sex and id(self) != id(predator):

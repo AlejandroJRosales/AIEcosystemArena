@@ -240,7 +240,7 @@ while True:
 			ecosystem.draw_transparent_circle(screen, selected_obj)
 
 		# handle player control
-		ecosystem.player.handle_player_movement(keys)
+		ecosystem.player.update(keys)
 
 	if keys[pygame.K_t]:
 		ecosystem.unethical_runtime_optimization()

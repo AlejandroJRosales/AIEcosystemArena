@@ -41,4 +41,3 @@ class Controller:
 
     def update(self, keys):
         self.handle_player_movement(keys)
-        self.selected_obj.update_body(envir, neighbors)

@@ -142,7 +142,7 @@ class Environment:
 		for obj in world_objs:
 			if any([isinstance(obj, entity) for entity in self.animals]):
 				if obj.is_player:
-					obj.update_body(self, world_objs, compute=True)
+					obj.update_body(self, world_objs)
 				else:
 					# world and [living, water]
 					obj.update(self, world_objs)
