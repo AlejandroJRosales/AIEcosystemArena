@@ -64,7 +64,7 @@ class Living(pygame.sprite.Sprite):
 		return self.x, self.y
 		
 	def attacked(self, predator):
-		# TODO: tune weight of health depletion for animal and plant
+		# TODO: tune weight of health depletion for animal species and plant
 		health_depl = self.start_health * .1
 		# subtract health from self since being attacked
 		self.health -= health_depl
@@ -264,6 +264,8 @@ class Animal(Living):
 			# go to location
 			self.output_idx = agents_choice
 
+			self.move()
+
 	def update_resources_need(self):
 		# self.water_need = tools.clamp(self.water_need + self.water_increment, 0, 1)
 		# self.food_need = tools.clamp(self.food_need + self.food_increment, 0, 1)
@@ -293,8 +295,9 @@ class Animal(Living):
 			if predator_loc is not None and tools.distance(self.x, self.y, predator_loc[0], predator_loc[0]) <= self.vision_dist:
 				self.memory[predator_key] = None
 
-	def update_body(self):
-		self.move()
+	def update_body(self, envir_class, neighbors, compute=False):
+		if compute:
+			neighbors = self.neighbors(neighbors)
 		self.update_resources_need()
 		self.update_internal_clocks()
 		self.update_memory()
@@ -303,13 +306,13 @@ class Animal(Living):
 		self.health -= self.water_need * 0.0001
 		self.health -= self.food_need * 0.0001
 		self.avoid_need = 0
-
-	def update(self, envir_class, predators):
-		neighbors = self.neighbors(predators)
-		self.think(neighbors)
-		self.update_body()
 		self.detect_collision(envir_class, neighbors)
 		self.check()
+
+	def update(self, envir_class, world_objs):
+		neighbors = self.neighbors(world_objs)
+		self.think(neighbors)
+		self.update_body(envir_class, neighbors)
 
 	def detect_collision(self, envir_class, predators):
 		for predator in predators:

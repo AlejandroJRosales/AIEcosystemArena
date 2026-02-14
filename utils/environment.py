@@ -137,21 +137,25 @@ class Environment:
 		else:
 			return species.Plant(self, (self.world_width * random.random(), self.world_height * random.random()))
 
-	def update(self, environment):
+	def update(self, world_objs):
 		# update objects
-		for obj in environment:
+		for obj in world_objs:
 			if any([isinstance(obj, entity) for entity in self.animals]):
-				obj.update(self, environment)
+				if obj.is_player:
+					obj.update_body(self, world_objs, compute=True)
+				else:
+					# world and [living, water]
+					obj.update(self, world_objs)
 			elif isinstance(obj, species.Plant):
 				obj.update()
 
 		if random.random() <= 0.15:
-			environment.append(self.generate_plant())
+			world_objs.append(self.generate_plant())
 
-		environment = [obj for obj in environment if obj.alive]
-		environment += self.children
+		world_objs = [obj for obj in world_objs if obj.alive]
+		world_objs += self.children
 		self.children = []
-		return environment
+		return world_objs
 
 
 class Water(pygame.sprite.Sprite):
